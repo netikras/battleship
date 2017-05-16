@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ai.game.sbattle.utils.GameBoardUtilsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2017-05-16T22:18:00" hostname="netikras-xps" time="0.114">
+  <properties/>
+  <testcase name="getRightTest" classname="com.ai.game.sbattle.utils.GameBoardUtilsTest" time="0.05"/>
+  <testcase name="getAboveTest" classname="com.ai.game.sbattle.utils.GameBoardUtilsTest" time="0.025"/>
+  <testcase name="getBelowTest" classname="com.ai.game.sbattle.utils.GameBoardUtilsTest" time="0.017"/>
+  <testcase name="getLeftTest" classname="com.ai.game.sbattle.utils.GameBoardUtilsTest" time="0.014"/>
+  <system-out><![CDATA[Coordinates{id='738f3ca4-2b5b-4680-b967-2ace79d55b08', x=4, y=2}
+Coordinates{id='66a219fd-9880-4861-a5fa-23d2eac7ea38', x=5, y=2}
+Coordinates{id='3b6c5364-f3e6-4972-b7f0-92c35f36d3f5', x=4, y=2}
+Coordinates{id='a0bcedcd-a4c7-4a95-8f86-2a172db4c334', x=4, y=1}
+Coordinates{id='34945a74-b530-4353-b376-df608f7d7226', x=4, y=2}
+Coordinates{id='c85c6574-3767-4fb6-b660-bd510b59c425', x=4, y=3}
+Coordinates{id='e0f598a8-fdd3-47ce-a6bd-5c3389c96a94', x=4, y=2}
+Coordinates{id='6238f165-f694-4711-9fba-74ce50d8573d', x=3, y=2}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

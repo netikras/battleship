@@ -1,0 +1,15 @@
+lGameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}
+ŒPlayerDto{id='player 1', board=GameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}}
+ŠShipDto{id='Ship 1', boardId='board 1', killed=false, squares=[SquareDto{id='Square 1', boardId='board 1', coordinates=CoordsDto{id='f6928273-acde-4455-883b-8cafdb3f4f2e', x=3, y=3}, isRevealed=false, shipId='Ship 1'}, SquareDto{id='Square 2', boardId='board 1', coordinates=CoordsDto{id='2ae51189-3e5d-4ff6-9b9b-76385c113eac', x=3, y=4}, isRevealed=true, shipId='Ship 1'}], type='BATTLESHIP'}
+›SquareDto{id='Square 1', boardId='board 1', coordinates=CoordsDto{id='f6928273-acde-4455-883b-8cafdb3f4f2e', x=3, y=3}, isRevealed=false, shipId='Ship 1'}
+šSquareDto{id='Square 2', boardId='board 1', coordinates=CoordsDto{id='2ae51189-3e5d-4ff6-9b9b-76385c113eac', x=3, y=4}, isRevealed=true, shipId='Ship 1'}
+÷MatchDto{id='Match #115', createdOn=Wed May 17 01:18:00 EEST 2017, playerA=PlayerDto{id='player 1', board=GameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}}, playerB=null, winnerId='null'}
+ACoordinates{id='738f3ca4-2b5b-4680-b967-2ace79d55b08', x=4, y=2}
+ACoordinates{id='66a219fd-9880-4861-a5fa-23d2eac7ea38', x=5, y=2}
+ACoordinates{id='3b6c5364-f3e6-4972-b7f0-92c35f36d3f5', x=4, y=2}
+ACoordinates{id='a0bcedcd-a4c7-4a95-8f86-2a172db4c334', x=4, y=1}
+ACoordinates{id='34945a74-b530-4353-b376-df608f7d7226', x=4, y=2}
+ACoordinates{id='c85c6574-3767-4fb6-b660-bd510b59c425', x=4, y=3}
+ACoordinates{id='e0f598a8-fdd3-47ce-a6bd-5c3389c96a94', x=4, y=2}
+ACoordinates{id='6238f165-f694-4711-9fba-74ce50d8573d', x=3, y=2}
+	

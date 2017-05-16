@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ai.game.sbattle.utils.ModelMapperTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-05-16T22:18:00" hostname="netikras-xps" time="0.12">
+  <properties/>
+  <testcase name="transformTest" classname="com.ai.game.sbattle.utils.ModelMapperTest" time="0.12"/>
+  <system-out><![CDATA[GameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}
+PlayerDto{id='player 1', board=GameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}}
+ShipDto{id='Ship 1', boardId='board 1', killed=false, squares=[SquareDto{id='Square 1', boardId='board 1', coordinates=CoordsDto{id='f6928273-acde-4455-883b-8cafdb3f4f2e', x=3, y=3}, isRevealed=false, shipId='Ship 1'}, SquareDto{id='Square 2', boardId='board 1', coordinates=CoordsDto{id='2ae51189-3e5d-4ff6-9b9b-76385c113eac', x=3, y=4}, isRevealed=true, shipId='Ship 1'}], type='BATTLESHIP'}
+SquareDto{id='Square 1', boardId='board 1', coordinates=CoordsDto{id='f6928273-acde-4455-883b-8cafdb3f4f2e', x=3, y=3}, isRevealed=false, shipId='Ship 1'}
+SquareDto{id='Square 2', boardId='board 1', coordinates=CoordsDto{id='2ae51189-3e5d-4ff6-9b9b-76385c113eac', x=3, y=4}, isRevealed=true, shipId='Ship 1'}
+MatchDto{id='Match #115', createdOn=Wed May 17 01:18:00 EEST 2017, playerA=PlayerDto{id='player 1', board=GameBoardDto{boardId='board 1', createdOn=Wed May 17 01:18:00 EEST 2017, playerId='player 1', squareIds=[]}}, playerB=null, winnerId='null'}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
