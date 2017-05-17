@@ -37,6 +37,17 @@ public class Coordinates {
     @ModelTransform(dtoFieldName = "y", dtoUpdatable = false)
     private int y;
 
+    @Transient
+    private int ratio;
+
+    public int getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(int ratio) {
+        this.ratio = ratio;
+    }
+
     public String getId() {
         return id;
     }

@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by netikras on 17.5.16.
@@ -25,35 +26,164 @@ public class ComputerPlayerService {
     private final Random random = new Random();
 
     public void fillBoard(GameBoard board, int difficulty) {
-
-    }
-
-    private List<Square> getSquaresSortedByProbabilityDesc() {
-
-        List<Coordinates> coordinates = dao.getCoordinatesSortedByShipCountDesc();
-
-        return null;
-    }
-
-
-
     /*
     1. rasti langelius, kuriuos žaidėjas šaudo rečiausiai
     2. tuose langeliuose apgyvendinti mažiausius laivus (1 langelio dydžio)
 
     3. suindeksuoti visus langelius pagal jų pažeidžiamumą unikaliais skaičiais (select.*order by .* desc)
     4. ieškoti laisvų (nepastatytų) langelių blokų (kiekvieno laivo dydžio), kurių langelių koeficientų suma būtų mažiausia.
-    5. tuose tuos langelius apstatyti laivais.
+    5. tuos langelius apstatyti laivais.
 
     6. Laikytis principo: kuo mažesnė tikimybė, kad laivas bus pamuštas - tuo mažesnį laivą ten statyti
      */
 
+        Ship.ShipType[] shipTypes = Ship.ShipType.values();
 
-    
+        for (int i = shipTypes.length - 1; i >= 0; i--) { // iterating backwards so that we'd start from the smallest ship
+            Ship.ShipType shipType = shipTypes[i];
+
+            for (int c = 0; c < shipType.getCount(); c++) {
+
+                List<Square> squaresBlock = getBestSuitedSquaresForShip(board, shipType);
+
+                if (squaresBlock != null && squaresBlock.size() > 0) {
+                    Ship ship = new Ship();
+                    ship.setBoard(board);
+                    ship.setKilled(false);
+                    ship.setId(UUID.randomUUID().toString());
+                    ship.setType(shipType);
+
+                    for (Square square : squaresBlock) {
+                        square.setHostedShip(ship);
+                    }
+                    ship.setSquares(squaresBlock);
+                }
+
+            }
+        }
+
+        if (board.getShips() == null || board.getShips().size() == 0) {
+            GameBoardUtils.fillWithShipsRandomly(board);
+        }
 
 
+    }
+
+    private List<Square> getBestSuitedSquaresForShip(GameBoard board, Ship.ShipType shipType) {
+
+        int currentBestRatio = Integer.MAX_VALUE;
+        int neededSquaresCount = shipType.getShipSize();
+        int calculatedRatio;
+
+        List<Square> chosenSquares = new ArrayList<>(neededSquaresCount);
+        List<Square> workspaceList = new ArrayList<>(neededSquaresCount);
+        List temp;
+
+        List<Square> sortedSquaresByRatioDesc = getSquaresForFillingBoardSortedDesc(board);
+        Square possibleBlockCandidate;
+        boolean blockLookupTerminated = false;
 
 
+        for (Square firstSquare : sortedSquaresByRatioDesc) {
+
+            if (!canSquareBeUsedForShipBlock(firstSquare)) {
+                continue;
+            }
+            blockLookupTerminated = false;
+            workspaceList.clear();
+            workspaceList.add(firstSquare);
+            possibleBlockCandidate = firstSquare;
+            for (int i = 1; i < neededSquaresCount; i++) {
+                possibleBlockCandidate = GameBoardUtils.getSquareRightTo(board, possibleBlockCandidate);
+
+                if (canSquareBeUsedForShipBlock(possibleBlockCandidate)) {
+                    workspaceList.add(possibleBlockCandidate);
+                } else {
+                    blockLookupTerminated = true;
+                    break;
+                }
+            }
+
+            if (!blockLookupTerminated) {
+                calculatedRatio = calculateSquareBlockRatio(workspaceList);
+                // Of course I could calculate ratio on-the-go and terminate block lookup sooner.
+                // But then again there are only a very few ships so I do not give a damn
+
+                if (calculatedRatio < currentBestRatio) {
+                    currentBestRatio = calculatedRatio;
+
+                    // reusing objects like a boss :D
+                    temp = chosenSquares;
+                    chosenSquares = workspaceList;
+                    workspaceList = temp;
+                }
+            }
+
+            blockLookupTerminated = false;
+            workspaceList.clear();
+            workspaceList.add(firstSquare);
+            possibleBlockCandidate = firstSquare;
+            for (int i = 0; i < neededSquaresCount; i++) {
+                possibleBlockCandidate = GameBoardUtils.getSquareBelow(board, possibleBlockCandidate);
+
+                if (canSquareBeUsedForShipBlock(possibleBlockCandidate)) {
+                    workspaceList.add(possibleBlockCandidate);
+                } else {
+                    blockLookupTerminated = true;
+                    break;
+                }
+            }
+
+            if (!blockLookupTerminated) {
+                calculatedRatio = calculateSquareBlockRatio(workspaceList);
+
+                if (calculatedRatio < currentBestRatio) {
+                    currentBestRatio = calculatedRatio;
+
+                    // reusing objects like a boss :D
+                    temp = chosenSquares;
+                    chosenSquares = workspaceList;
+                    workspaceList = temp;
+                }
+            }
+
+        }
+
+
+        return chosenSquares;
+    }
+
+    private int calculateSquareBlockRatio(List<Square> workspaceList) {
+        int ratio = 0;
+
+        for (Square square : workspaceList) {
+            ratio += square.getCoordinates().getRatio();
+        }
+
+        return ratio;
+    }
+
+
+    private boolean canSquareBeUsedForShipBlock(Square square) {
+        return square != null
+                && square.getHostedShip() == null
+                ;
+    }
+
+    private List<Square> getSquaresForFillingBoardSortedDesc(GameBoard board) {
+
+        List<Coordinates> coordinates = dao.getCoordinatesSortedByHitCountAsc();
+
+        List<Square> squares = new ArrayList<>();
+        int ratio = 0;
+
+        for (Coordinates coord : coordinates) {
+            coord.setRatio(ratio++);
+            squares.add(GameBoardUtils.getSquare(board, coord.getX(), coord.getY()));
+        }
+
+        return squares;
+    }
 
 
     public void hit(GameBoard board, int difficulty) {
@@ -269,7 +399,7 @@ public class ComputerPlayerService {
 
     private Square getBestGuessedOccupiedSquare(GameBoard board) {
 //        List<Square> hittableSquares = dao.getSquaresToHit(getCoveredSquares(board));
-        List<Coordinates> hittableCoords = dao.getCoordinatesSortedByHitCountDesc();
+        List<Coordinates> hittableCoords = dao.getCoordinatesSortedByHitCountAsc();
 
         List<Square> hittableSquares = new ArrayList<>();
         List<Square> remainingSquares = getCoveredSquares(board);
@@ -297,7 +427,7 @@ public class ComputerPlayerService {
     private List<Ship> getNotKilledShips(GameBoard board) {
         List<Ship> ships = new ArrayList<>();
 
-        for (Ship ship :board.getShips()) {
+        for (Ship ship : board.getShips()) {
             for (Square square : ship.getSquares()) {
                 if (!square.isRevealed()) {
                     ships.add(ship);

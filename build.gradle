@@ -3,6 +3,7 @@ version 'v1'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'war'
 
 sourceCompatibility = 1.8
 
@@ -14,6 +15,7 @@ def slf4jVersion = '1.7.21'
 def log4jVersion = '1.2.17.redhat-1'
 def servletVersion = '3.0.1'
 def h2Version = '1.4.193'
+def thymeleafVersion = '3.0.6.RELEASE'
 
 
 
@@ -26,6 +28,13 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
+
+    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version: "${thymeleafVersion}"
+
+    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring4', version: "${thymeleafVersion}"
+
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-gradle-plugin
     compile group: 'org.hibernate', name: 'hibernate-gradle-plugin', version: "${hibernateVersion}"
@@ -73,3 +82,65 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-test', version: '4.3.2.RELEASE'
 
 }
+
+
+
+
+
+def tomcatHomeLocal = '/opt/tomcat/apache-tomcat-8.5.11'
+def shortName = 'sbattle'
+
+
+//task deployLocal(type: Copy, dependsOn: ['buildWar']) {
+task deployLocal(type: Copy) {
+    description = "Deploys the module to local web-container"
+    mustRunAfter "undeployLocal"
+
+
+//    from war.archivePath
+    from "${buildDir}/libs/"
+    into "${tomcatHomeLocal}/webapps"
+    include "*.war"
+
+    def warname = "${project.name}-${version}"
+
+    rename { String fileName ->
+        fileName.replace("${warname}.war", "${shortName}.war")
+    }
+
+    doLast {
+        println "Deploying application locally"
+    }
+}
+
+task undeployLocal(type: Delete) {
+    description = "Undeploys module from the local web-container"
+
+    def warname = "${shortName}"
+
+    doLast {
+        println "Undeploying application locally"
+        file("${tomcatHomeLocal}/webapps/${warname}.war").delete()
+        file("${tomcatHomeLocal}/webapps/${warname}").deleteDir()
+        println "Undeployed!"
+    }
+
+}
+
+
+task redeployView(type: Copy) {
+    description = "Redeploys view files (htmls)"
+
+    from "${webAppDirName}/"
+    into "${tomcatHomeLocal}/webapps/${shortName}/"
+}
+
+
+task redeployLocal(dependsOn: ["undeployLocal", "deployLocal"]) {
+    description = "Redeploys the module to local web-container"
+
+    doLast {
+        println "Redeploying application locally"
+    }
+}
+

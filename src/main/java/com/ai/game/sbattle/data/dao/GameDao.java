@@ -1,12 +1,14 @@
 package com.ai.game.sbattle.data.dao;
 
 import com.ai.game.sbattle.data.model.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by netikras on 17.5.16.
  */
+@Component
 public class GameDao {
 
     public GameMatch getMatchById(String id) {
@@ -43,7 +45,8 @@ public class GameDao {
     }
 
 
-    public List<Coordinates> getCoordinatesSortedByHitCountDesc() {
+    public List<Coordinates> getCoordinatesSortedByHitCountAsc() {
+        // FIXME exclude current game
         /*
 select
   i.address, count(r.electronic) as el_count
@@ -102,11 +105,12 @@ order by el_count desc
                 "        order by hit_count desc" +
                 "    ) stats" +
                 "        on stats.id = c.id" +
-                "order by stats.hit_count desc";
+                "order by stats.hit_count asc";
         return null;
     }
 
     public List<Square> getSquaresToHit(List<String> candidatesIds) {
+        // FIXME exclude current game
         /*
         select paper, electronic, count(*) as occurrences from recipient group by paper, electronic order by occurrences desc;
         select
@@ -139,6 +143,7 @@ order by el_count desc
 
 
     public List<Coordinates> getCoordinatesSortedByShipCountDesc() {
+        // FIXME exclude current game
         /*
 
         NOT returning squares having 0 ships ever hosted on them. If square has not been used it should be picked up randomly.

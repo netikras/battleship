@@ -267,4 +267,11 @@ public class GameBoardUtils {
     }
 
 
+    public static List<Square> getNewRandomBoardSquares() {
+        List<Square> squares = new ArrayList<>();
+
+
+
+        return squares;
+    }
 }

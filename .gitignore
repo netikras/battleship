@@ -2,6 +2,15 @@
 #.gitignore
 #.idea/vcs.xml
 .idea/
+.gradle/
+build/
 build/tmp/
 #src/main/resources/
 #src/test/resources/
+.gradle/3.4/
+.gradle/buildOutputCleanup/
+build/classes/main/com/ai/game/sbattle/config/GameMvcConfig.class
+build/classes/main/com/ai/game/sbattle/controller/DataController.class
+build/classes/main/com/ai/game/sbattle/controller/ViewController.class
+build/libs/
+build/resources/

@@ -179,7 +179,9 @@ public class GameService {
                 pos_x = 0;
                 pos_y++;
             }
-            square.setCoordinates(new Coordinates(pos_x++, pos_y));
+            Coordinates coordinates = new Coordinates(pos_x++, pos_y);
+            coordinates.setRatio(i);
+            square.setCoordinates(coordinates);
             square.setRevealed(false);
             square.setBoard(board);
 

@@ -2,17 +2,13 @@ package com.ai.game.sbattle.controller;
 
 import com.ai.game.sbattle.data.dto.MatchDto;
 import com.ai.game.sbattle.data.dto.ShipDto;
-import com.ai.game.sbattle.data.dto.SquareDto;
 import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.service.GameService;
 import com.ai.game.sbattle.utils.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,10 +18,11 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(
-        value = "/sbattle/match/{gameId}",
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class GameController {
+        value = "/game/match/{gameId}",
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+//        ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE
+)
+public class DataController {
 
 
     @Resource
@@ -35,6 +32,7 @@ public class GameController {
             value = "/hit/{squareId}",
             method = RequestMethod.POST
     )
+    @ResponseBody
     public boolean hit(
             @PathVariable(name = "gameId") String matchId,
             @PathVariable(name = "squareId") String squareId) {
@@ -45,6 +43,7 @@ public class GameController {
             value = "/board/{boardId}/ships",
             method = RequestMethod.POST
     )
+    @ResponseBody
     public boolean submitShips(
             @PathVariable(name = "gameId") String gameId,
             @RequestBody List<ShipDto> shipDtos,
@@ -52,7 +51,15 @@ public class GameController {
         return false;
     }
 
-    public GameBoard getUpdatedBoard(String id) {
+    @RequestMapping(
+            value = "/board/{boardId}",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public GameBoard getUpdatedBoard(
+            @PathVariable(name = "gameId") String matchId,
+            @PathVariable(name = "boardId") String boardId
+    ) {
         return null;
     }
 
@@ -60,11 +67,25 @@ public class GameController {
             value = "/poll",
             method = RequestMethod.GET
     )
+    @ResponseBody
     public MatchDto getUpdatedMatch(
             @PathVariable(name = "gameId") String gameId) {
         GameMatch match = gameService.getMatch(gameId);
 
         return ModelMapper.transform(match, new MatchDto());
+    }
+
+
+
+    @RequestMapping(
+            value = "/test",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public String test(
+            @PathVariable(name = "gameId") String matchId
+    ) {
+        return "Hello World! Match ID: " + matchId;
     }
 
 }

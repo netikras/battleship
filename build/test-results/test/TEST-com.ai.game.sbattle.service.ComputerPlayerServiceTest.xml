@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.ai.game.sbattle.service.ComputerPlayerServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-05-16T22:18:01" hostname="netikras-xps" time="0.015">
-  <properties/>
-  <testcase name="hitTest" classname="com.ai.game.sbattle.service.ComputerPlayerServiceTest" time="0.015"/>
-  <system-out><![CDATA[
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

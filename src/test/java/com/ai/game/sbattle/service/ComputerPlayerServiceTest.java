@@ -4,6 +4,7 @@ import com.ai.game.sbattle.data.dao.GameDao;
 import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.data.model.Ship;
+import com.ai.game.sbattle.utils.ConsoleVisualizer;
 import com.ai.game.sbattle.utils.GameBoardUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,18 @@ public class ComputerPlayerServiceTest {
         computerPlayerService.hit(match.getPlayerA().getBoard(), 0);
 
         System.out.println();
+
+        ConsoleVisualizer.drawBoard(match.getPlayerA().getBoard());
     }
 
+
+
+    @Test
+    public void prepareBoard() {
+        GameMatch match = gameService.createNewMatch("testGame");
+        computerPlayerService.fillBoard(match.getPlayerA().getBoard(), 0);
+
+        ConsoleVisualizer.drawBoard(match.getPlayerA().getBoard());
+
+    }
 }
