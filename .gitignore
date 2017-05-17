@@ -1,0 +1,7 @@
+
+#.gitignore
+#.idea/vcs.xml
+.idea/
+build/tmp/
+#src/main/resources/
+#src/test/resources/
