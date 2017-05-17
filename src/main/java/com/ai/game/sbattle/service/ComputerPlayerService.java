@@ -1,6 +1,7 @@
 package com.ai.game.sbattle.service;
 
 import com.ai.game.sbattle.data.dao.GameDao;
+import com.ai.game.sbattle.data.model.Coordinates;
 import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.Ship;
 import com.ai.game.sbattle.data.model.Square;
@@ -27,6 +28,34 @@ public class ComputerPlayerService {
 
     }
 
+    private List<Square> getSquaresSortedByProbabilityDesc() {
+
+        List<Coordinates> coordinates = dao.getCoordinatesSortedByShipCountDesc();
+
+        return null;
+    }
+
+
+
+    /*
+    1. rasti langelius, kuriuos žaidėjas šaudo rečiausiai
+    2. tuose langeliuose apgyvendinti mažiausius laivus (1 langelio dydžio)
+
+    3. suindeksuoti visus langelius pagal jų pažeidžiamumą unikaliais skaičiais (select.*order by .* desc)
+    4. ieškoti laisvų (nepastatytų) langelių blokų (kiekvieno laivo dydžio), kurių langelių koeficientų suma būtų mažiausia.
+    5. tuose tuos langelius apstatyti laivais.
+
+    6. Laikytis principo: kuo mažesnė tikimybė, kad laivas bus pamuštas - tuo mažesnį laivą ten statyti
+     */
+
+
+    
+
+
+
+
+
+
     public void hit(GameBoard board, int difficulty) {
 
         List<Square> remainingSquares = new ArrayList<>();
@@ -40,28 +69,6 @@ public class ComputerPlayerService {
         for (int i = 0; i < remainingSquares.size(); i++) {
             coords[i] = remainingSquares.get(i).getCoordinates().getId();
         }
-
-        /*
-        select paper, electronic, count(*) as occurrences from recipient group by paper, electronic order by occurrences desc;
-        select
-            c.id,
-            count(*) total_count
-        from
-            square sq
-            join coordinates c
-                on c.id = sq.coord_id
-            join board b
-                on game_board.id = sq.board_id
-            join player p
-                on p.id = b.player_id
-                and p.robot <> 1
-        where
-            sq.hosted_ship_id is not null
-            and c.id in [coords]
-        group by c.id
-        order by total_count desc
-        ;
-         */
 
         Square squareToHit = null;
 
@@ -174,7 +181,12 @@ public class ComputerPlayerService {
 
         squareToHit = getRandomlyGuessedOccupiedSquare(board);
 
-        hitSquare(board, squareToHit);
+        if (squareToHit != null) {
+            hitSquare(board, squareToHit);
+            return;
+        }
+
+        throw new RuntimeException("Computer has no idea where to hit. Spot number: 3");
     }
 
 
@@ -256,8 +268,21 @@ public class ComputerPlayerService {
     }
 
     private Square getBestGuessedOccupiedSquare(GameBoard board) {
-        List<Square> hittableSquares = dao.getSquaresToHit(getCoveredSquares(board));
-        if (hittableSquares == null || hittableSquares.size() == 0) {
+//        List<Square> hittableSquares = dao.getSquaresToHit(getCoveredSquares(board));
+        List<Coordinates> hittableCoords = dao.getCoordinatesSortedByHitCountDesc();
+
+        List<Square> hittableSquares = new ArrayList<>();
+        List<Square> remainingSquares = getCoveredSquares(board);
+
+        for (Coordinates coordinates : hittableCoords) {
+            Square square = GameBoardUtils.getSquare(remainingSquares, coordinates.getX(), coordinates.getY());
+            if (square != null) {
+                hittableSquares.add(square);
+                // of course we can return here...
+            }
+        }
+
+        if (hittableSquares.size() == 0) {
             return null;
         }
         return hittableSquares.get(0); // the further from the beginning - the less chances are to hit a ship. A good place for difficulty leveling at offence

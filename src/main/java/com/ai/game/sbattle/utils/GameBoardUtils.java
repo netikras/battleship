@@ -154,8 +154,22 @@ public class GameBoardUtils {
 
     }
 
+    public static Square getSquareInCoordinate(List<Square> squares, String coordId) {
+        for (Square square : squares) {
+            if (square.getCoordinates().getId().equals(coordId)) {
+                return square;
+            }
+        }
+
+        return null;
+    }
+
     public static Square getSquare(GameBoard board, int x, int y) {
-        for (Square square : board.getSquares()) {
+        return getSquare(board.getSquares(), x, y);
+    }
+
+    public static Square getSquare(List<Square> squares, int x, int y) {
+        for (Square square : squares) {
             if (square.getCoordinates().getX() == x && square.getCoordinates().getY() == y) {
                 return square;
             }
