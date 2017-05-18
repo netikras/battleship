@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ViewController {
 
-
+// http://www.thymeleaf.org/doc/articles/thymeleaf3migration.html
     @RequestMapping(value = {"/", "/play"}, method = RequestMethod.GET)
     public ModelAndView play() {
         ModelAndView modelAndView = new ModelAndView();
