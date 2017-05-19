@@ -16,6 +16,7 @@ def log4jVersion = '1.2.17.redhat-1'
 def servletVersion = '3.0.1'
 def h2Version = '1.4.193'
 def thymeleafVersion = '3.0.6.RELEASE'
+def aspectjVersion = '1.8.10'
 
 
 
@@ -34,11 +35,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4
     compile group: 'org.thymeleaf', name: 'thymeleaf-spring4', version: "${thymeleafVersion}"
-
-
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-gradle-plugin
-    compile group: 'org.hibernate', name: 'hibernate-gradle-plugin', version: "${hibernateVersion}"
-
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${databindVersion}"
@@ -63,13 +59,6 @@ dependencies {
 
     compile group: 'org.springframework', name: 'spring-beans', version: "${springVersion}"
 
-    // https://mvnrepository.com/artifact/org.springframework/spring-orm
-    compile group: 'org.springframework', name: 'spring-orm', version: "${springVersion}"
-
-    // https://mvnrepository.com/artifact/org.springframework/spring-tx
-    compile group: 'org.springframework', name: 'spring-tx', version: "${springVersion}"
-
-
     // https://mvnrepository.com/artifact/org.springframework/spring-webmvc
     compile group: 'org.springframework', name: 'spring-webmvc', version: "${springVersion}"
 
@@ -80,6 +69,16 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework/spring-test
     compile group: 'org.springframework', name: 'spring-test', version: '4.3.2.RELEASE'
+
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-aop
+    compile group: 'org.springframework', name: 'spring-aop', version:  "${springVersion}"
+
+    // https://mvnrepository.com/artifact/org.aspectj/aspectjrt
+    compile group: 'org.aspectj', name: 'aspectjrt', version: "${aspectjVersion}"
+
+    // https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: "${aspectjVersion}"
 
 }
 
@@ -92,7 +91,7 @@ def shortName = 'sbattle'
 
 
 //task deployLocal(type: Copy, dependsOn: ['buildWar']) {
-task deployLocal(type: Copy) {
+task deployLocal(type: Copy, dependsOn: war) {
     description = "Deploys the module to local web-container"
     mustRunAfter "undeployLocal"
 

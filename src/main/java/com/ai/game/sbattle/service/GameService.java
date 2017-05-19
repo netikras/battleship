@@ -11,6 +11,7 @@ import java.util.*;
  * Created by netikras on 17.5.15.
  */
 @Service
+
 public class GameService {
 
     @Resource
@@ -209,7 +210,10 @@ public class GameService {
         return match;
     }
 
+
+
     public GameMatch getMatch(String gameId) {
+        System.out.println("Getting match [service]: " + gameId);
         return dao.getMatchById(gameId);
     }
 }

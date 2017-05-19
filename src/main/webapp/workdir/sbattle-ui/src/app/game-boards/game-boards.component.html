@@ -1,0 +1,19 @@
+game-boards works!
+
+<div class="game-boards-container">
+  <div class="game-board-player">
+    <table>
+      <tr *ngFor="let row of board_1; let r = index">
+        <td *ngFor="let col of row let c = index" id="pb_{{r}}-{{c}}" [class]="getClassForPlayerSquare(col)" ></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="game-board-opponent">
+    <table>
+      <tr *ngFor="let row of board_1; let r = index">
+        <td *ngFor="let col of row let c = index" id="ob_{{r}}-{{c}}" (click)="openSquare(col)" [class]="getClassForOpponentSquare(col)" ></td>
+      </tr>
+    </table>
+  </div>
+</div>

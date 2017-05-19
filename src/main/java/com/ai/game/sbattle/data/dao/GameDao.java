@@ -1,8 +1,12 @@
 package com.ai.game.sbattle.data.dao;
 
 import com.ai.game.sbattle.data.model.*;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -11,37 +15,74 @@ import java.util.List;
 @Component
 public class GameDao {
 
+    @Resource(name = "sessionFactory")
+    private SessionFactory sessionFactory;
+
+    private Session currentSession = null;
+
+
+    private Session getCurrentSession() {
+        Session session = currentSession;
+
+        if (session == null || !session.isOpen()) {
+            try {
+                session = sessionFactory.getCurrentSession();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (session == null || !session.isOpen()) {
+                session = sessionFactory.openSession();
+            }
+        }
+
+
+
+        return session;
+    }
+
+
+    private Criteria buildCriteria(Class model) {
+        return getCurrentSession().createCriteria(model);
+    }
+
+    private Criteria buildCriteria(Class model, String alias) {
+        return getCurrentSession().createCriteria(model, alias);
+    }
+
+
     public GameMatch getMatchById(String id) {
-        return null;
+        System.out.println("Getting match [dao]: " + id);
+        return getCurrentSession().get(GameMatch.class, id);
     }
 
     public Square getSquareById(String id) {
-        return null;
+        return getCurrentSession().get(Square.class, id);
     }
 
 
     public String save(GameMatch match) {
-        return "";
+        return (String) getCurrentSession().save(match);
     }
 
     public String save(GameBoard board) {
-        return "";
+        return (String) getCurrentSession().save(board);
     }
 
     public void update(GameMatch match) {
-
+        getCurrentSession().update(match);
     }
 
     public void update(Ship ship) {
-
+        getCurrentSession().update(ship);
     }
 
     public void update(Square square) {
-
+        getCurrentSession().update(square);
     }
 
     public void update(GameBoard board) {
-
+        getCurrentSession().update(board);
     }
 
 
@@ -137,7 +178,6 @@ order by el_count desc
         List<Square> squares = null;
 
 
-
         return squares;
     }
 
@@ -180,10 +220,15 @@ order by el_count desc
         List<Coordinates> coords = null;
 
 
-
         return coords;
     }
 
 
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 
+    public void setCurrentSession(Session currentSession) {
+        this.currentSession = currentSession;
+    }
 }

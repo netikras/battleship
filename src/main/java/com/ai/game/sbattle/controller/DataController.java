@@ -6,8 +6,9 @@ import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.service.GameService;
 import com.ai.game.sbattle.utils.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * Created by netikras on 17.5.15.
  */
-@Controller
+@RestController
 @RequestMapping(
         value = "/game/match/{gameId}",
         produces = MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -24,6 +25,7 @@ import java.util.List;
 )
 public class DataController {
 
+    private static Logger logger = LoggerFactory.getLogger(DataController.class);
 
     @Resource
     private GameService gameService;
@@ -65,16 +67,18 @@ public class DataController {
 
     @RequestMapping(
             value = "/poll",
-            method = RequestMethod.GET
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @ResponseBody
     public MatchDto getUpdatedMatch(
             @PathVariable(name = "gameId") String gameId) {
+        logger.info("HEEEELLLOOOOOO");
         GameMatch match = gameService.getMatch(gameId);
 
         return ModelMapper.transform(match, new MatchDto());
+//        return new MatchDto();
     }
-
 
 
     @RequestMapping(

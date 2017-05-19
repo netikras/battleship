@@ -1,0 +1,62 @@
+.game-board-player table {
+  border: medium double black;
+  background-color: dodgerblue;
+}
+
+.game-board-opponent table {
+  border: medium double black;
+  background-color: dodgerblue;
+}
+
+
+
+.game-board-player table tr td {
+  border: 1px solid black;
+  width: 1em;
+  height: 1em;
+  color: dimgray;
+  border-radius: 13%;
+}
+
+.game-board-opponent table tr td {
+  border: 1px solid black;
+  width: 1em;
+  height: 1em;
+  color: dimgray;
+  border-radius: 13%;
+}
+
+
+
+
+.game-board-opponent {
+  display: inline-block;
+  margin: 1em;
+}
+.game-board-player {
+  display: inline-block;
+  margin: 1em;
+}
+
+
+
+
+td.closed {
+  background-color: dodgerblue;
+}
+
+td.opened_healthy {
+  background-color: #4d2926;
+}
+
+td.opened_empty {
+  background-color: lightgray;
+}
+
+td.opened_damaged {
+  background-color: indianred;
+}
+
+td.opened_killed {
+  background-color: red;
+}
