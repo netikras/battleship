@@ -4,6 +4,7 @@ import com.ai.game.sbattle.data.model.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -48,6 +49,15 @@ public class GameDao {
 
     private Criteria buildCriteria(Class model, String alias) {
         return getCurrentSession().createCriteria(model, alias);
+    }
+
+
+
+    public List<Coordinates> getAllCoordinates() {
+        return buildCriteria(Coordinates.class)
+                .addOrder(Order.desc("y"))
+                .addOrder(Order.desc("x"))
+                .list();
     }
 
 
@@ -230,5 +240,13 @@ order by el_count desc
 
     public void setCurrentSession(Session currentSession) {
         this.currentSession = currentSession;
+    }
+
+    public GameBoard getBoard(String boardId) {
+        return getCurrentSession().get(GameBoard.class, boardId);
+    }
+
+    public Player getPlayer(String playerId) {
+        return getCurrentSession().get(Player.class, playerId);
     }
 }

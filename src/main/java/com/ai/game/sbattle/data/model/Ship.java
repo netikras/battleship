@@ -2,6 +2,8 @@ package com.ai.game.sbattle.data.model;
 
 import com.ai.game.sbattle.utils.ModelTransform;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,8 +23,9 @@ public class Ship {
     @ModelTransform(dtoFieldName = "id", dtoUpdatable = false)
     private String id;
 
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "hostedShip")
-    @ModelTransform(dtoFieldName = "squares", dtoUpdatable = false)
+    @OneToMany(orphanRemoval = true/*, fetch = FetchType.EAGER*/, cascade = CascadeType.ALL, mappedBy = "hostedShip")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ModelTransform(dtoFieldName = "squareIds", dtoValueExtractField = "id", dtoUpdatable = false)
     private List<Square> squares;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)

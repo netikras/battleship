@@ -12,8 +12,8 @@ public class GameBoardDto {
     private String boardId;
     private Date createdOn;
     private String playerId;
-    private List<String> squareIds;
-
+    private List<SquareDto> squares;
+    private List<ShipDto> ships;
 
     public String getBoardId() {
         return boardId;
@@ -39,12 +39,20 @@ public class GameBoardDto {
         this.playerId = playerId;
     }
 
-    public List<String> getSquareIds() {
-        return squareIds;
+    public List<SquareDto> getSquares() {
+        return squares;
     }
 
-    public void setSquareIds(List<String> squareIds) {
-        this.squareIds = squareIds;
+    public void setSquares(List<SquareDto> squares) {
+        this.squares = squares;
+    }
+
+    public List<ShipDto> getShips() {
+        return ships;
+    }
+
+    public void setShips(List<ShipDto> ships) {
+        this.ships = ships;
     }
 
     @Override
@@ -53,7 +61,8 @@ public class GameBoardDto {
                 "boardId='" + boardId + '\'' +
                 ", createdOn=" + createdOn +
                 ", playerId='" + playerId + '\'' +
-                ", squareIds=" + squareIds +
+                ", squares=" + squares +
+                ", ships=" + ships +
                 '}';
     }
 }

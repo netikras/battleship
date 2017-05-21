@@ -19,7 +19,7 @@ public class Square {
     @ModelTransform(dtoFieldName = "id", dtoUpdatable = false)
     private String id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id")
     @ModelTransform(dtoFieldName = "boardId", dtoUpdatable = false, dtoValueExtractField = "id")
     private GameBoard board;

@@ -1,11 +1,12 @@
 package com.ai.game.sbattle.data.model;
 
 import com.ai.game.sbattle.utils.ModelTransform;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,9 @@ public class GameBoard {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "board", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,/* fetch = FetchType.EAGER, */mappedBy = "board", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ModelTransform(dtoFieldName = "ships")
     private List<Ship> ships;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
@@ -42,8 +45,9 @@ public class GameBoard {
     @ModelTransform(dtoFieldName = "playerId", dtoValueExtractField = "id")
     private Player boardOwner;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
-    @ModelTransform(dtoFieldName = "squareIds", dtoValueExtractField = "id")
+    @OneToMany(/*fetch = FetchType.EAGER, */cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ModelTransform(dtoFieldName = "squares")
     private List<Square> squares;
 
     public String getId() {
@@ -76,6 +80,11 @@ public class GameBoard {
 
     public void setShips(List<Ship> ships) {
         this.ships = ships;
+        if (ships != null) {
+            for (Ship ship : ships) {
+                ship.setBoard(this);
+            }
+        }
     }
 
     public Player getBoardOwner() {
@@ -84,6 +93,9 @@ public class GameBoard {
 
     public void setBoardOwner(Player boardOwner) {
         this.boardOwner = boardOwner;
+        if (boardOwner != null) {
+            boardOwner.setBoard(this);
+        }
     }
 
     public List<Square> getSquares() {
@@ -92,6 +104,11 @@ public class GameBoard {
 
     public void setSquares(List<Square> squares) {
         this.squares = squares;
+        if (squares != null) {
+            for (Square square : squares) {
+                square.setBoard(this);
+            }
+        }
     }
 
 

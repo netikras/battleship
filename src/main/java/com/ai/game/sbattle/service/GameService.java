@@ -4,6 +4,7 @@ import com.ai.game.sbattle.data.dao.GameDao;
 import com.ai.game.sbattle.data.model.*;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.*;
 
@@ -16,6 +17,64 @@ public class GameService {
 
     @Resource
     private GameDao dao;
+
+    private List<Coordinates> allCoordinates;
+
+    @PostConstruct
+    public void init() {
+        allCoordinates = dao.getAllCoordinates();
+    }
+
+
+    public GameBoard buildNewBoard() {
+        GameBoard board = new GameBoard();
+
+        board.setId(null);
+        board.setCreatedOn(new Date());
+
+        List<Square> squares = new ArrayList<>(allCoordinates.size());
+        for (Coordinates coordinates : allCoordinates) {
+            Square square = new Square();
+
+//            square.setId(UUID.randomUUID().toString()); // remove after testing -- IDs are to be assigned by DAO
+            square.setRevealed(false);
+            square.setBoard(board);
+            square.setCoordinates(coordinates);
+            square.setHostedShip(null);
+
+            squares.add(square);
+        }
+
+        board.setSquares(squares);
+        board.setShips(null);
+        board.setBoardOwner(null);
+
+        return board;
+    }
+
+    public GameMatch buildNewMatch() {
+        GameMatch match = new GameMatch();
+        GameBoard board;
+
+        board = buildNewBoard();
+        board.setBoardOwner(createNewPlayer());
+        match.setPlayerA(board.getBoardOwner());
+//        board.setId(dao.save(board));
+        System.out.println("Saved board #1");
+
+        board = buildNewBoard();
+        board.setBoardOwner(createNewPlayer());
+        match.setPlayerB(board.getBoardOwner());
+//        board.setId(dao.save(board));
+        System.out.println("Saved board #2");
+
+        match.setWinner(null);
+
+//        match.setId(dao.save(match));
+//        return match;
+        return dao.getMatchById(dao.save(match));
+    }
+
 
     public void hit(String matchId, String squareId) {
         Square square = dao.getSquareById(squareId);
@@ -155,9 +214,9 @@ public class GameService {
     }
 
 
-    public Player createNewPlayer(String id) {
+    public Player createNewPlayer() {
         Player player = new Player();
-        player.setId(id);
+//        player.setId();
         return player;
     }
 
@@ -202,8 +261,8 @@ public class GameService {
         GameMatch match = new GameMatch();
 
         match.setId(gameId);
-        match.setPlayerA(createNewPlayer(UUID.randomUUID().toString()));
-        match.setPlayerB(createNewPlayer(UUID.randomUUID().toString()));
+        match.setPlayerA(createNewPlayer());
+        match.setPlayerB(createNewPlayer());
         createNewBoard(match.getPlayerA(), 10);
         createNewBoard(match.getPlayerB(), 10);
 
@@ -211,9 +270,16 @@ public class GameService {
     }
 
 
-
     public GameMatch getMatch(String gameId) {
         System.out.println("Getting match [service]: " + gameId);
         return dao.getMatchById(gameId);
+    }
+
+    public GameBoard getBoard(String boardId) {
+        return dao.getBoard(boardId);
+    }
+
+    public Player getPlayer(String playerId) {
+        return dao.getPlayer(playerId);
     }
 }

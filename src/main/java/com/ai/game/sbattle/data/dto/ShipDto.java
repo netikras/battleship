@@ -10,7 +10,7 @@ public class ShipDto {
     private String id;
     private String boardId;
     private boolean killed;
-    private List<SquareDto> squares;
+    private List<String> squareIds;
     private String type;
 
     public String getId() {
@@ -29,12 +29,12 @@ public class ShipDto {
         this.boardId = boardId;
     }
 
-    public List<SquareDto> getSquares() {
-        return squares;
+    public List<String> getSquareIds() {
+        return squareIds;
     }
 
-    public void setSquares(List<SquareDto> squares) {
-        this.squares = squares;
+    public void setSquareIds(List<String> squareIds) {
+        this.squareIds = squareIds;
     }
 
     public boolean isKilled() {
@@ -59,7 +59,7 @@ public class ShipDto {
                 "id='" + id + '\'' +
                 ", boardId='" + boardId + '\'' +
                 ", killed=" + killed +
-                ", squares=" + squares +
+                ", squareIds=" + squareIds +
                 ", type='" + type + '\'' +
                 '}';
     }

@@ -23,6 +23,10 @@ public class Player {
     @ModelTransform(dtoFieldName = "id", dtoUpdatable = false)
     private String id;
 
+    @Column(name = "name")
+    @ModelTransform(dtoFieldName = "name")
+    private String name;
+
     @Column(name = "created_on")
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -34,8 +38,8 @@ public class Player {
     private Date updatedOn;
 
 
-    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "board_id", nullable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "boardOwner")
+//    @JoinColumn(name = "board_id", updatable = false)
     @ModelTransform(dtoFieldName = "board", dtoUpdatable = false)
     private GameBoard board;
 
@@ -49,6 +53,14 @@ public class Player {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getCreatedOn() {
@@ -87,6 +99,7 @@ public class Player {
     public String toString() {
         return "Player{" +
                 "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
                 ", board=" + board +

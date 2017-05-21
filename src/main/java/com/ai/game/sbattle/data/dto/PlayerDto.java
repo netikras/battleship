@@ -8,12 +8,22 @@ public class PlayerDto {
     private String id;
     private GameBoardDto board;
 
+    private String name;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public GameBoardDto getBoard() {
@@ -29,6 +39,7 @@ public class PlayerDto {
         return "PlayerDto{" +
                 "id='" + id + '\'' +
                 ", board=" + board +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

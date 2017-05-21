@@ -44,7 +44,7 @@ public class GameMatch {
     @ModelTransform(dtoFieldName = "playerB", dtoUpdatable = false)
     private Player playerB;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "winner_id")
     @ModelTransform(dtoFieldName = "winnerId", dtoUpdatable = false, dtoValueExtractField = "id")
     private Player winner;
