@@ -1,9 +1,6 @@
 package com.ai.game.sbattle.controller;
 
-import com.ai.game.sbattle.data.dto.GameBoardDto;
-import com.ai.game.sbattle.data.dto.MatchDto;
-import com.ai.game.sbattle.data.dto.PlayerDto;
-import com.ai.game.sbattle.data.dto.ShipDto;
+import com.ai.game.sbattle.data.dto.*;
 import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.data.model.Player;
@@ -52,7 +49,7 @@ public class DataController {
             @PathVariable(name = "gameId") String gameId,
             @RequestBody List<ShipDto> shipDtos,
             @PathVariable(name = "boardId") String boardId) {
-        return false;
+        return gameService.submitBoardShips(shipDtos, boardId);
     }
 
     @RequestMapping(
@@ -95,6 +92,48 @@ public class DataController {
         Player player = gameService.getPlayer(playerId);
         return ModelMapper.transform(player, new PlayerDto());
     }
+
+
+    @RequestMapping(
+            value = "/player/{playerId}/user/{username}",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public void claimPlayer(
+            @PathVariable(name = "gameId") String matchId,
+            @PathVariable(name = "playerId") String playerId,
+            @PathVariable(name = "username") String username
+    ) {
+        gameService.assignPlayerToUser(playerId, username);
+    }
+
+
+    @RequestMapping(
+            value = "/player/{playerId}/robot",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public void refusePlayer(
+            @PathVariable(name = "gameId") String matchId,
+            @PathVariable(name = "playerId") String playerId
+    ) {
+        gameService.assignPlayerToRobot(playerId);
+    }
+
+
+    @RequestMapping(
+            value = "/open/square/{squareId}",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public SquareDto openSquare(
+            @PathVariable(name = "gameId") String matchId,
+            @PathVariable(name = "squareId") String squareId
+    ) {
+
+        return gameService.openSquare(squareId);
+    }
+
 
 
     @RequestMapping(

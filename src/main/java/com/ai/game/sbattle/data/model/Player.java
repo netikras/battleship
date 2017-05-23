@@ -44,6 +44,7 @@ public class Player {
     private GameBoard board;
 
     @Column(name = "robot")
+    @ModelTransform(dtoFieldName = "robot")
     private boolean robot = false;
 
 

@@ -274,4 +274,14 @@ public class GameBoardUtils {
 
         return squares;
     }
+
+
+    public static Square getSquare(GameBoard board, String id) {
+        for (Square square : board.getSquares()) {
+            if (id.equals(square.getId())) {
+                return square;
+            }
+        }
+        return null;
+    }
 }

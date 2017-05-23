@@ -25,7 +25,7 @@ public class Ship {
 
     @OneToMany(orphanRemoval = true/*, fetch = FetchType.EAGER*/, cascade = CascadeType.ALL, mappedBy = "hostedShip")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ModelTransform(dtoFieldName = "squareIds", dtoValueExtractField = "id", dtoUpdatable = false)
+    @ModelTransform(dtoFieldName = "squareIds", dtoValueExtractField = "id")
     private List<Square> squares;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
@@ -39,7 +39,7 @@ public class Ship {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, updatable = false)
-    @ModelTransform(dtoFieldName = "type", dtoUpdatable = false)
+    @ModelTransform(dtoFieldName = "type")
     private ShipType type;
 
 

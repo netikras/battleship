@@ -249,4 +249,8 @@ order by el_count desc
     public Player getPlayer(String playerId) {
         return getCurrentSession().get(Player.class, playerId);
     }
+
+    public void update(Player player) {
+        getCurrentSession().update(player);
+    }
 }

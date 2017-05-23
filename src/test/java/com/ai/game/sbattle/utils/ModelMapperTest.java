@@ -2,6 +2,9 @@ package com.ai.game.sbattle.utils;
 
 import com.ai.game.sbattle.data.dto.*;
 import com.ai.game.sbattle.data.model.*;
+import com.ai.game.sbattle.service.ComputerPlayerService;
+import com.ai.game.sbattle.service.GameService;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,6 +16,14 @@ import java.util.List;
  */
 public class ModelMapperTest {
 
+    GameService gameService;
+    ComputerPlayerService computerPlayerService;
+
+    @Before
+    public void init() {
+        gameService = new GameService();
+        computerPlayerService = new ComputerPlayerService();
+    }
 
     @Test
     public void transformTest() {
@@ -78,6 +89,28 @@ public class ModelMapperTest {
         System.out.println(ModelMapper.transform(sq1, squareDto));
         System.out.println(ModelMapper.transform(sq2, squareDto));
         System.out.println(ModelMapper.transform(match, matchDto));
+    }
+
+
+    @Test
+    public void applyDtoUpdateTest() {
+        GameBoard board = gameService.createNewBoard(gameService.createNewPlayer(), 10);
+        GameBoardDto dto = ModelMapper.transform(board, new GameBoardDto());
+        Player otherPlayer = gameService.createNewPlayer();
+        PlayerDto playerDto = ModelMapper.transform(otherPlayer, new PlayerDto());
+        dto.setPlayerId(playerDto.getId());
+
+        GameBoardUtils.fillWithShipsRandomly(board);
+
+
+        Ship ship = board.getShips().get(0);
+        ShipDto shipDto = ModelMapper.transform(ship, new ShipDto());
+        Ship otherShip = ModelMapper.apply(new Ship(), shipDto);
+
+
+        ModelMapper.apply(board, dto);
+
+        System.out.println("done!");
     }
 
 }

@@ -1,7 +1,11 @@
 package com.ai.game.sbattle.service;
 
 import com.ai.game.sbattle.data.dao.GameDao;
+import com.ai.game.sbattle.data.dto.ShipDto;
+import com.ai.game.sbattle.data.dto.SquareDto;
 import com.ai.game.sbattle.data.model.*;
+import com.ai.game.sbattle.utils.GameBoardUtils;
+import com.ai.game.sbattle.utils.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -281,5 +285,85 @@ public class GameService {
 
     public Player getPlayer(String playerId) {
         return dao.getPlayer(playerId);
+    }
+
+    public void assignPlayerToUser(String playerId, String username) {
+        Player player = dao.getPlayer(playerId);
+        player.setName(username);
+        player.setRobot(false);
+        dao.update(player);
+    }
+
+    public void assignPlayerToRobot(String playerId) {
+        Player player = dao.getPlayer(playerId);
+        player.setRobot(true);
+        player.setName(null);
+        dao.update(player);
+    }
+
+    public List<Ship> completeShipModels(List<Ship> ships, GameBoard board) {
+
+        List<Square> shipSquares;
+
+        for (Ship ship : ships) {
+            shipSquares = new ArrayList<>(ship.getSquares().size());
+            for (Square square : ship.getSquares()) {
+                final Square boardSquare = GameBoardUtils.getSquare(board, square.getId());
+                boardSquare.setHostedShip(ship);
+                boardSquare.setRevealed(false);
+                boardSquare.setBoard(board);
+
+                shipSquares.add(boardSquare);
+            }
+            ship.setSquares(shipSquares);
+            ship.setBoard(board);
+            ship.setKilled(false);
+        }
+
+        return ships;
+    }
+
+    public boolean submitBoardShips(List<ShipDto> shipDtos, String boardId) {
+        boolean valid = false;
+        GameBoard board = dao.getBoard(boardId);
+        List<Ship> ships = new ArrayList<>(shipDtos.size());
+
+        for (ShipDto dto : shipDtos) {
+            ships.add(ModelMapper.apply(new Ship(), dto));
+        }
+
+        board.setShips(ships);
+        completeShipModels(ships, board);
+
+
+        valid = validateBoardShips(board, ships.size());
+
+        if (valid) {
+            dao.update(board);
+        }
+
+        return valid;
+    }
+
+    public SquareDto openSquare(String squareId) {
+        Square square = dao.getSquareById(squareId);
+        if (square.isRevealed()) {
+            throw new IllegalStateException("Square is already open");
+        }
+        square.setRevealed(true);
+        Ship ship = square.getHostedShip();
+        if (ship != null) {
+            ship.setKilled(true);
+            for (Square shipSquare : ship.getSquares()) {
+                if (!shipSquare.isRevealed()) {
+                    ship.setKilled(false);
+                    break;
+                }
+            }
+        }
+
+        dao.update(square);
+
+        return ModelMapper.transform(square, new SquareDto());
     }
 }

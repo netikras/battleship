@@ -9,6 +9,7 @@ public class PlayerDto {
     private GameBoardDto board;
 
     private String name;
+    private boolean robot;
 
     public String getId() {
         return id;
@@ -26,6 +27,14 @@ public class PlayerDto {
         this.name = name;
     }
 
+    public boolean isRobot() {
+        return robot;
+    }
+
+    public void setRobot(boolean robot) {
+        this.robot = robot;
+    }
+
     public GameBoardDto getBoard() {
         return board;
     }
@@ -40,6 +49,7 @@ public class PlayerDto {
                 "id='" + id + '\'' +
                 ", board=" + board +
                 ", name='" + name + '\'' +
+                ", robot=" + robot +
                 '}';
     }
 }

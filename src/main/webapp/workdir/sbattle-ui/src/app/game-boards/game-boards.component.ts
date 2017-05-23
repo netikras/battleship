@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {GameSvcService} from "../game-svc.service";
+// import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 @Component({
   selector: 'app-game-boards',
@@ -7,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class GameBoardsComponent implements OnInit {
 
-  constructor() {
+  constructor(private gameService : GameSvcService) {
   }
 
   board_1 = [];
