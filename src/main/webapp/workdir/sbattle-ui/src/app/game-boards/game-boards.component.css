@@ -24,9 +24,18 @@
   height: 1em;
   color: dimgray;
   border-radius: 13%;
+  cursor: crosshair;
 }
 
 
+.board-large table tr td {
+  width: 2em;
+  height: 2em;
+}
+
+.game-board-opponent table tr td.closed:hover {
+  background-color: darkblue;
+}
 
 
 .game-board-opponent {

@@ -5,6 +5,7 @@ import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.data.model.Player;
 import com.ai.game.sbattle.service.GameService;
+import com.ai.game.sbattle.utils.GameBoardUtils;
 import com.ai.game.sbattle.utils.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Created by netikras on 17.5.15.
  */
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(
         value = "/game/match/{gameId}",
@@ -170,6 +172,8 @@ public class DataController {
             @PathVariable(name = "gameId") String matchId
     ) {
         GameMatch match = gameService.buildNewMatch();
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard());
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
         return ModelMapper.transform(match, new MatchDto());
     }
 

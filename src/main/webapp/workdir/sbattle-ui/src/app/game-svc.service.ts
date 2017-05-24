@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
+import { Headers, RequestOptions } from '@angular/http';
+
 import {Ship} from './model/Ship'
 import {Square} from './model/Square'
 import {Player} from './model/Player'
@@ -19,23 +21,61 @@ export class GameSvcService {
 
   private baseUrl : string = "http://localhost:8080/sbattle/game/match/";
 
-  private matchId: string = "";
+  private matchId: string = "0";
 
-  private getBaseUrl(mId: string) : string { return this.baseUrl + this.matchId; }
+  private getBaseUrl() : string { return this.baseUrl + this.matchId; }
 
 
-  openSquare(id: string) : Observable<Square> {
+  public openSquare(id: string) : Observable<Square> {
     return this.http
-      .get("")
+      .get(this.getBaseUrl() + "/open/square/" + id, this.buildDefaultOptions())
       .map(this.extractData)
       .catch(this.handleError)
       ;
   }
 
 
+
+  public startNewMatch(): Observable<Match> {
+    return this.http
+      .get(this.getBaseUrl() + "/test/new/match", this.buildDefaultOptions())
+      .map(this.extractData)
+      .catch(this.handleError)
+      ;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  private buildDefaultOptions(): RequestOptions {
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+      'Access-Control-Allow-Headers': 'X-Requested-With,content-type',
+      'Access-Control-Allow-Credentials': true,
+
+    });
+    let options = new RequestOptions({ headers: headers });
+    return options;
+}
+
+
+
   private extractData(res: Response) {
     let body = res.json();
-    return body.data || { };
+    console.log(body);
+    // return body.data || { };
+    return body;
   }
 
   private handleError (error: Response | any) {
