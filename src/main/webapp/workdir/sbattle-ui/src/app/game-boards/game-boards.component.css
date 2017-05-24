@@ -18,6 +18,12 @@
   border-radius: 13%;
 }
 
+.game-board-player .prepare table tr td:hover {
+  border: 2px solid black;
+  color: slategray;
+  cursor: pointer;
+}
+
 .game-board-opponent table tr td {
   border: 1px solid black;
   width: 1em;
@@ -69,3 +75,9 @@ td.opened_damaged {
 td.opened_killed {
   background-color: red;
 }
+
+
+td.prepare_marked {
+  background-color: deepskyblue;
+}
+

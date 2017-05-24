@@ -45,6 +45,15 @@ export class GameSvcService {
   }
 
 
+  public submitShips(boardId: string, ships: Ship[]): Observable<boolean> {
+    return this.http
+      .post(this.getBaseUrl() + "/board/"+boardId+"/ships", ships , this.buildDefaultOptions())
+      .map(this.extractData)
+      .catch(this.handleError)
+      ;
+  }
+
+
 
 
 

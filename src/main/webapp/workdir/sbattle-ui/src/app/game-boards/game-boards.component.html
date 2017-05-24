@@ -1,22 +1,37 @@
 
 
 <div *ngIf="match" class="game-boards-container">
-  <div class="game-board-player">
+  <div class="game-board-player {{gameStarted ? '' : 'board-large' }}">
     <table>
       <tr *ngFor="let row of squaresA; let r = index">
-        <td *ngFor="let col of row; let c = index" id="pb_{{r}}-{{c}}" [class]="getClassForPlayerSquare(col)" ></td>
+        <td *ngFor="let sq of row; let c = index" id="pb_{{r}}-{{c}}" (mouseover)="markUntilSquare(sq)"
+            (click)="selectShipSquares(sq)" [ngClass]="getClassForPlayerSquare(sq)"></td>
       </tr>
     </table>
   </div>
 
-  <div class="game-board-opponent board-large">
+  <div class="game-board-opponent {{gameStarted ? 'board-large' : '' }}">
     <table>
       <tr *ngFor="let row of squaresB; let r = index">
-        <td *ngFor="let col of row; let c = index" id="ob_{{r}}-{{c}}" (click)="openSquare(col)" [class]="getClassForOpponentSquare(col)" ></td>
+        <td *ngFor="let sq of row; let c = index" id="ob_{{r}}-{{c}}" (click)="openSquare(sq)"
+            [ngClass]="getClassForOpponentSquare(sq)"></td>
       </tr>
     </table>
+  </div>
+
+  <div *ngIf="!gameStarted" class="avail-ships">
+    <div *ngIf="availableShips && availableShips.length > 0; then prepare else continue"></div>
+
+    <ng-template #prepare>
+      <div>Remaining ships:</div>
+      <div *ngFor="let s of availableShips">{{s.type}}</div>
+    </ng-template>
+
+    <ng-template #continue>
+      <button (click)="startGame()">Start!</button>
+    </ng-template>
   </div>
 
 </div>
 
-<button (click)="startNewMatch()" >New match</button>
+<button (click)="startNewMatch()">New match</button>
