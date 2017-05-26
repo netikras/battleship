@@ -41,8 +41,8 @@ public class ComputerPlayerServiceTest {
 
         GameMatch match = gameService.createNewMatch("TestGame");
 
-        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard());
-        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard(), true);
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard(), true);
 
         GameBoard board = match.getPlayerA().getBoard();
         Ship ship = board.getShips().get(0);

@@ -23,7 +23,7 @@ public class Ship {
     @ModelTransform(dtoFieldName = "id", dtoUpdatable = false)
     private String id;
 
-    @OneToMany(orphanRemoval = true/*, fetch = FetchType.EAGER*/, cascade = CascadeType.ALL, mappedBy = "hostedShip")
+    @OneToMany(/*, fetch = FetchType.EAGER,*/ cascade = CascadeType.ALL, mappedBy = "hostedShip")
     @LazyCollection(LazyCollectionOption.FALSE)
     @ModelTransform(dtoFieldName = "squareIds", dtoValueExtractField = "id")
     private List<Square> squares;

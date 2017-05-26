@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {GameSvcService} from "../game-svc.service";
 import {Match} from "../model/Match";
 import {Square} from "../model/Square";
@@ -36,6 +36,13 @@ export class GameBoardsComponent implements OnInit {
   }
 
 
+
+  private onError(error: any) {
+    alert(error);
+    console.error(error)
+  }
+
+
   private selectShipSquares(square: Square) {
     if (!this.anchorSquare) {
       this.unmarkAllSquares();
@@ -70,7 +77,7 @@ export class GameBoardsComponent implements OnInit {
     }
 
     if (this.availableShips) {
-      for (let i = this.availableShips.length - 1; i>=0; i--) {
+      for (let i = this.availableShips.length - 1; i >= 0; i--) {
         if (this.availableShips[i].id === proposedShip.id) {
           this.availableShips.splice(i, 1);
         }
@@ -104,7 +111,7 @@ export class GameBoardsComponent implements OnInit {
 
     let squares: Square[] = this.match.playerA.board.squares;
 
-    for (let i = ship.squareIds.length - 1; i>=0; i--) {
+    for (let i = ship.squareIds.length - 1; i >= 0; i--) {
       for (let s = 0; s < squares.length; s++) {
         if (squares[s].id === ship.squareIds[i]) {
           ship.squareIds.splice(i, 1);
@@ -367,17 +374,17 @@ export class GameBoardsComponent implements OnInit {
     let ship: Ship;
     this.availableShips = [];
     this.unmarkAllSquares();
-    for (let i=0; i<match.playerA.board.ships.length; i++) {
-      ship = match.playerA.board.ships[i];
-      this.availableShips.push(ship);
-      this.unlinkShipFromSquares(ship);
-    }
+    // for (let i = 0; i < match.playerA.board.ships.length; i++) {
+    //   ship = match.playerA.board.ships[i];
+    //   this.availableShips.push(ship);
+    //   this.unlinkShipFromSquares(ship);
+    // }
   }
 
   startNewMatch() {
     this.gameService.startNewMatch().subscribe(
       match => this.sortSquares(match),
-      error => this.errorMessage = <any>error
+      error => this.onError(<any>error)
     )
 
   }
@@ -386,22 +393,48 @@ export class GameBoardsComponent implements OnInit {
   openSquare(square: Square) {
     console.log("Opening square:");
     console.log(square);
-    square.isRevealed = true;
-    let ship: Ship = this.getShip(square.shipId);
-    if (ship) {
-      ship.killed = true;
-      for (let i = 0; i < ship.squareIds.length; i++) {
-        let shipSquare: Square = this.getSquare(ship.squareIds[i]);
-        if (!shipSquare.isRevealed) {
-          ship.killed = false;
-          break;
+    // square.revealed = true;
+
+    this.gameService.openSquare(square.id).subscribe(
+      sq => this.updateOpenedSquare(sq, square),
+      error => this.onError(<any>error)
+    );
+
+  }
+
+  updateOpenedSquare(openedSquare: Square, oldSquare: Square) {
+
+    if (openedSquare && oldSquare) {
+      console.log("REVEALING SQUARE");
+      oldSquare.revealed = openedSquare.revealed;
+      oldSquare.shipId = openedSquare.shipId;
+
+      let ship: Ship = this.getShip(oldSquare.shipId);
+      if (ship) {
+        ship.killed = true;
+        for (let i = 0; i < ship.squareIds.length; i++) {
+          let shipSquare: Square = this.getSquare(ship.squareIds[i]);
+          if (!shipSquare.revealed) {
+            ship.killed = false;
+            break;
+          }
         }
       }
+    } else {
+      console.log("NOT SQUARE");
     }
   }
 
+
+  hitMe() {
+    this.gameService.hitMe(this.match.playerA.board.boardId).subscribe(
+      square => this.updateOpenedSquare(square, this.getSquare(square.id)),
+      error => this.onError(<any>error)
+    );
+  }
+
   getClassForOpponentSquare(square: Square) {
-    if (!square.isRevealed) {
+    if (!square.revealed) {
       return "closed";
     }
     // console.log(square);
@@ -419,11 +452,15 @@ export class GameBoardsComponent implements OnInit {
       return "prepare_marked";
     }
 
+    let classes: string = "";
+
     if (!square.shipId) {
+      if (square.revealed)
+        return "opened_empty";
       return "closed";
     }
 
-    if (square.isRevealed) {
+    if (square.revealed) {
       if (this.getShip(square.shipId).killed)
         return "opened_killed";
       return "opened_damaged";
@@ -466,6 +503,9 @@ export class GameBoardsComponent implements OnInit {
       }
     }
 
+    // console.log("Looking for a ship in board:");
+    // console.log(board);
+
     for (let i = 0; i < board.ships.length; i++) {
       let ship: Ship = board.ships[i];
       if (ship.id === shipId) {
@@ -473,6 +513,8 @@ export class GameBoardsComponent implements OnInit {
       }
     }
 
+    console.log("Could not find ship id=" + shipId + " in board :");
+    // console.log(board);
     return null;
   }
 
@@ -527,7 +569,7 @@ export class GameBoardsComponent implements OnInit {
     let playerBoard: Board = this.match.playerA.board;
     this.gameService.submitShips(playerBoard.boardId, playerBoard.ships).subscribe(
       result => this.setGameStarted(result),
-      error => this.errorMessage = <any>error
+      error => this.onError(<any>error)
     );
 
   }

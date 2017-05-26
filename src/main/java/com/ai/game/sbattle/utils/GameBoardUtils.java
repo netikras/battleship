@@ -118,7 +118,7 @@ public class GameBoardUtils {
     }
 
 
-    public static void fillWithShipsRandomly(GameBoard board) {
+    public static void fillWithShipsRandomly(GameBoard board, boolean setIDs) {
         if (board.getShips() != null && board.getShips().size() > 0) {
             throw new IllegalStateException("Game board already has " + board.getShips().size() + " ships. Cannot fill it randomly");
         }
@@ -138,7 +138,8 @@ public class GameBoardUtils {
             for (int i = 0; i < shipsCount; i++) {
                 List<Square> shipSquares = getNextPristineBlock(board, shipSize);
                 Ship ship = new Ship();
-                ship.setId(UUID.randomUUID().toString());
+                if (setIDs)
+                    ship.setId(UUID.randomUUID().toString());
                 ship.setKilled(false);
                 ship.setBoard(board);
                 ship.setType(shipType);
@@ -269,7 +270,6 @@ public class GameBoardUtils {
 
     public static List<Square> getNewRandomBoardSquares() {
         List<Square> squares = new ArrayList<>();
-
 
 
         return squares;

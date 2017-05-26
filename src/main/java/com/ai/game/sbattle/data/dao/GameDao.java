@@ -5,6 +5,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -38,7 +40,6 @@ public class GameDao {
         }
 
 
-
         return session;
     }
 
@@ -50,7 +51,6 @@ public class GameDao {
     private Criteria buildCriteria(Class model, String alias) {
         return getCurrentSession().createCriteria(model, alias);
     }
-
 
 
     public List<Coordinates> getAllCoordinates() {
@@ -92,7 +92,7 @@ public class GameDao {
     }
 
     public void update(GameBoard board) {
-        getCurrentSession().update(board);
+        getCurrentSession().saveOrUpdate(board);
     }
 
 
@@ -137,27 +137,57 @@ order by el_count desc
 
 
         String queryString = "" +
-                "select" +
-                "    c.*" +
-                "from" +
-                "    coordinates c" +
-                "    join (" +
-                "        select" +
-                "            c.id," +
-                "            count(sq.revealed) as hit_count" +
-                "        from" +
-                "            coordinates c" +
-                "            left join square sq" +
-                "                on sq.coord_id = c.id" +
-                "        where" +
-                "            sq.revealed = 1" +
-                "            or sq.revealed is null" +
-                "        group by c.id" +
-                "        order by hit_count desc" +
-                "    ) stats" +
-                "        on stats.id = c.id" +
-                "order by stats.hit_count asc";
-        return null;
+                "select " +
+                "    c.* " +
+                "from " +
+                "    coordinates c " +
+                "    join ( " +
+                "        select " +
+                "            c.id, " +
+                "            count(sq.revealed) as hit_count " +
+                "        from " +
+                "            coordinates c " +
+                "            left join board_square sq " +
+                "                on sq.coord_id = c.id " +
+                "        where " +
+                "            sq.revealed = true " +
+                "            or sq.revealed is null " +
+                "        group by c.id " +
+                "        order by hit_count desc " +
+                "    ) stats " +
+                "        on stats.id = c.id " +
+                "order by stats.hit_count asc "
+                ;
+
+
+//        Query query = getCurrentSession()
+//                .createQuery(
+//                        "SELECT " +
+//                                        "c " +
+//                                "FROM " +
+//                                    "Coordinates c " +
+//                                    "JOIN ( " +
+//                                        "SELECT " +
+//                                            "c.id, " +
+//                                            "count(sq.revealed) as hit_count " +
+//                                        "FROM " +
+//                                            "Coordinates c " +
+//                                            "LEFT JOIN Square sq " +
+//                                                "on sq.coordinates.id = c.id " +
+//                                        "WHERE " +
+//                                            "sq.revealed = true " +
+//                                            "OR sq.revealed is null " +
+//                                        "GROUP BY c.id " +
+//                                        "ORDER BY hit_count DESC " +
+//                                    ") stats " +
+//                                        "on stats.id = c.id " +
+//                                "ORDER BY stats.hit_count ASC"
+//                );
+
+        NativeQuery query = getCurrentSession().createNativeQuery(queryString);
+
+
+        return query.addEntity(Coordinates.class).list();
     }
 
     public List<Square> getSquaresToHit(List<String> candidatesIds) {
@@ -227,8 +257,35 @@ order by el_count desc
          */
 
 
-        List<Coordinates> coords = null;
+        String queryStr = "" +
+                "SELECT " +
+                "   c .* " +
+                "FROM " +
+                "    Coordinates c " +
+                "    JOIN ( " +
+                "        SELECT " +
+                "            c.id, " +
+                "            count(*) as total_count " +
+                "        FROM " +
+                "            board_square sq " +
+                "            JOIN Coordinates c " +
+                "                on c.id = sq.coord_id " +
+                "            JOIN game_board b " +
+                "                on b.id = sq.board_id " +
+                "            JOIN Players p " +
+                "                on p.id = b.player_id " +
+                "                and p.robot = false " +
+                "        WHERE " +
+                "            sq.hosted_ship_id is not null " +
+                "        GROUP BY c.id " +
+                "        ORDER BY total_count desc " +
+                "    ) stats " +
+                "        on stats.id = c.id " +
+                "ORDER BY stats.total_count DESC"
+                ;
+        NativeQuery query = getCurrentSession().createNativeQuery(queryStr);
 
+        List<Coordinates> coords = query.addEntity(Coordinates.class).list();
 
         return coords;
     }

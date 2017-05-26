@@ -35,7 +35,7 @@ public class GameBoard {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @OneToMany(cascade = CascadeType.ALL,/* fetch = FetchType.EAGER, */mappedBy = "board", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,/* fetch = FetchType.EAGER, */mappedBy = "board")
     @LazyCollection(LazyCollectionOption.FALSE)
     @ModelTransform(dtoFieldName = "ships")
     private List<Ship> ships;
@@ -45,7 +45,7 @@ public class GameBoard {
     @ModelTransform(dtoFieldName = "playerId", dtoValueExtractField = "id")
     private Player boardOwner;
 
-    @OneToMany(/*fetch = FetchType.EAGER, */cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
+    @OneToMany(/*fetch = FetchType.EAGER, */cascade = CascadeType.ALL, mappedBy = "board")
     @LazyCollection(LazyCollectionOption.FALSE)
     @ModelTransform(dtoFieldName = "squares")
     private List<Square> squares;

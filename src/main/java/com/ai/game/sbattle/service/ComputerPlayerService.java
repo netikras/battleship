@@ -50,7 +50,7 @@ public class ComputerPlayerService {
                     Ship ship = new Ship();
                     ship.setBoard(board);
                     ship.setKilled(false);
-                    ship.setId(UUID.randomUUID().toString());
+//                    ship.setId(UUID.randomUUID().toString());
                     ship.setType(shipType);
 
                     for (Square square : squaresBlock) {
@@ -63,7 +63,7 @@ public class ComputerPlayerService {
         }
 
         if (board.getShips() == null || board.getShips().size() == 0) {
-            GameBoardUtils.fillWithShipsRandomly(board);
+            GameBoardUtils.fillWithShipsRandomly(board, false);
         }
 
 
@@ -186,7 +186,7 @@ public class ComputerPlayerService {
     }
 
 
-    public void hit(GameBoard board, int difficulty) {
+    public Square hit(GameBoard board, int difficulty) {
 
         List<Square> remainingSquares = new ArrayList<>();
         for (Square square : board.getSquares()) {
@@ -216,12 +216,12 @@ public class ComputerPlayerService {
                     hittableSquare = GameBoardUtils.getSquareRightTo(board, square); // try 1 position right from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                     hittableSquare = GameBoardUtils.getSquareLeftTo(board, otherSquare); // try 2 positions left from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                 }
 
@@ -231,12 +231,12 @@ public class ComputerPlayerService {
                     hittableSquare = GameBoardUtils.getSquareLeftTo(board, square); // try 1 position left from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                     hittableSquare = GameBoardUtils.getSquareRightTo(board, otherSquare); // try 2 positions right from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                 }
 
@@ -245,12 +245,12 @@ public class ComputerPlayerService {
                     hittableSquare = GameBoardUtils.getSquareBelow(board, square); // try 1 position below from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                     hittableSquare = GameBoardUtils.getSquareAbove(board, otherSquare); // try 2 positions above from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                 }
 
@@ -259,12 +259,12 @@ public class ComputerPlayerService {
                     hittableSquare = GameBoardUtils.getSquareAbove(board, square); // try 1 position above from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                     hittableSquare = GameBoardUtils.getSquareBelow(board, otherSquare); // try 2 positions below from the 'square'
                     if (hittableSquare != null && !hittableSquare.isRevealed()) {
                         hitSquare(board, hittableSquare);
-                        return;
+                        return hittableSquare;
                     }
                 }
 
@@ -280,22 +280,22 @@ public class ComputerPlayerService {
                 otherSquare = GameBoardUtils.getSquareLeftTo(board, square);
                 if (otherSquare != null && !otherSquare.isRevealed()) {
                     hitSquare(board, otherSquare);
-                    return;
+                    return otherSquare;
                 }
                 otherSquare = GameBoardUtils.getSquareRightTo(board, square);
                 if (otherSquare != null && !otherSquare.isRevealed()) {
                     hitSquare(board, otherSquare);
-                    return;
+                    return otherSquare;
                 }
                 otherSquare = GameBoardUtils.getSquareAbove(board, square);
                 if (otherSquare != null && !otherSquare.isRevealed()) {
                     hitSquare(board, otherSquare);
-                    return;
+                    return otherSquare;
                 }
                 otherSquare = GameBoardUtils.getSquareBelow(board, square);
                 if (otherSquare != null && !otherSquare.isRevealed()) {
                     hitSquare(board, otherSquare);
-                    return;
+                    return otherSquare;
                 }
 
             }
@@ -306,14 +306,14 @@ public class ComputerPlayerService {
 
         if (squareToHit != null) { // very likely to be 0 at the beginning of data collection to DB
             hitSquare(board, squareToHit);
-            return;
+            return squareToHit;
         }
 
         squareToHit = getRandomlyGuessedOccupiedSquare(board);
 
         if (squareToHit != null) {
             hitSquare(board, squareToHit);
-            return;
+            return squareToHit;
         }
 
         throw new RuntimeException("Computer has no idea where to hit. Spot number: 3");

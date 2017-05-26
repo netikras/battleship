@@ -30,7 +30,7 @@ public class Square {
     private Coordinates coordinates;
 
     @Column(name = "revealed", nullable = false)
-    @ModelTransform(dtoFieldName = "isRevealed", dtoUpdatable = false)
+    @ModelTransform(dtoFieldName = "revealed", dtoUpdatable = false)
     private boolean revealed;
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)

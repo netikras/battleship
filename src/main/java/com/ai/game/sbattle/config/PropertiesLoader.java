@@ -18,6 +18,7 @@ public class PropertiesLoader {
         defaultDbProps = new Properties();
         defaultDbProps.put("hibernate.connection.url", "jdbc:h2:mem:sbattle_db;TRACE_LEVEL_FIle=4;TRACE_LEVEL_SYSTEM_OUT=4");
         defaultDbProps.put("hibernate.connection.url", "jdbc:h2:tcp://localhost/~/received/sbattle_db;TRACE_LEVEL_FIle=4;TRACE_LEVEL_SYSTEM_OUT=4");
+        defaultDbProps.put("hibernate.connection.url", "jdbc:h2:tcp://localhost/~/received/sbattle_db");
 //        defaultDbProps.put("hibernate.connection.url", "jdbc:h2:mem:sbattle_db");
         defaultDbProps.put("hibernate.connection.username", "sbattle");
         defaultDbProps.put("hibernate.connection.password", "sbattle");

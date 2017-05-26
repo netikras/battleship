@@ -100,7 +100,7 @@ public class ModelMapperTest {
         PlayerDto playerDto = ModelMapper.transform(otherPlayer, new PlayerDto());
         dto.setPlayerId(playerDto.getId());
 
-        GameBoardUtils.fillWithShipsRandomly(board);
+        GameBoardUtils.fillWithShipsRandomly(board, true);
 
 
         Ship ship = board.getShips().get(0);

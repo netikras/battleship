@@ -22,6 +22,9 @@ public class GameService {
     @Resource
     private GameDao dao;
 
+    @Resource
+    private ComputerPlayerService computerPlayerService;
+
     private List<Coordinates> allCoordinates;
 
     @PostConstruct
@@ -363,6 +366,19 @@ public class GameService {
         }
 
         dao.update(square);
+
+        return ModelMapper.transform(square, new SquareDto());
+    }
+
+    public void updateBoardSetting(GameBoard board) {
+        System.out.println("Saving board settings");
+        dao.update(board);
+    }
+
+    public SquareDto opponentTurn(String gameId, String boardId) {
+        GameBoard board = dao.getBoard(boardId);
+        Square square = computerPlayerService.hit(board, 0);
+
 
         return ModelMapper.transform(square, new SquareDto());
     }

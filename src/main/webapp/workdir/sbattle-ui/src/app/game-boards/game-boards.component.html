@@ -19,7 +19,7 @@
     </table>
   </div>
 
-  <div *ngIf="!gameStarted" class="avail-ships">
+  <div *ngIf="!gameStarted; else bhitme" class="avail-ships">
     <div *ngIf="availableShips && availableShips.length > 0; then prepare else continue"></div>
 
     <ng-template #prepare>
@@ -28,10 +28,14 @@
     </ng-template>
 
     <ng-template #continue>
-      <button (click)="startGame()">Start!</button>
+      <button id="btnStartGame" (click)="startGame()">Start!</button>
     </ng-template>
   </div>
 
+  <ng-template #bhitme>
+    <button id="btnHitMe" (click)="hitMe()">Hit me!</button>
+  </ng-template>
+
 </div>
 
-<button (click)="startNewMatch()">New match</button>
+<button id="btnNewMatch" (click)="startNewMatch()">New match</button>

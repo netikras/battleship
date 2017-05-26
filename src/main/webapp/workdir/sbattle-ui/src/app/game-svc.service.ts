@@ -54,6 +54,16 @@ export class GameSvcService {
   }
 
 
+  public hitMe(boardId: string): Observable<Square> {
+    return this.http
+      .get(this.getBaseUrl() + "/board/"+boardId+"/hitme", this.buildDefaultOptions())
+      .map(this.extractData)
+      .catch(this.handleError)
+      ;
+  }
+
+
+
 
 
 

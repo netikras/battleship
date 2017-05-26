@@ -4,7 +4,7 @@ export class Square {
   id: string;
   boardId: string;
   coordinates: Coords;
-  isRevealed: boolean;
+  revealed: boolean;
   shipId: string;
 
 

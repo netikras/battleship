@@ -81,3 +81,26 @@ td.prepare_marked {
   background-color: deepskyblue;
 }
 
+
+button {
+  border-radius: 10%;
+  height: 4em ;
+  width: 8em;
+  font: 'Trebuchet', 'Trebuchet', 'Trebuchet';
+  font-size: 2em;
+  border: solid darkslategray 3px;
+  cursor: pointer;
+}
+
+button.btnNewMatch {
+  background-color: darkgreen;
+}
+
+button.btnStartGame {
+  background-color: green;
+}
+
+button.btnHitMe {
+  background-color: orangered;
+}
+

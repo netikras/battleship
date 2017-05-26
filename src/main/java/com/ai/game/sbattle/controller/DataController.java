@@ -4,6 +4,7 @@ import com.ai.game.sbattle.data.dto.*;
 import com.ai.game.sbattle.data.model.GameBoard;
 import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.data.model.Player;
+import com.ai.game.sbattle.service.ComputerPlayerService;
 import com.ai.game.sbattle.service.GameService;
 import com.ai.game.sbattle.utils.GameBoardUtils;
 import com.ai.game.sbattle.utils.ModelMapper;
@@ -31,16 +32,8 @@ public class DataController {
     @Resource
     private GameService gameService;
 
-    @RequestMapping(
-            value = "/hit/{squareId}",
-            method = RequestMethod.POST
-    )
-    @ResponseBody
-    public boolean hit(
-            @PathVariable(name = "gameId") String matchId,
-            @PathVariable(name = "squareId") String squareId) {
-        return false;
-    }
+    @Resource
+    private ComputerPlayerService computerPlayerService;
 
     @RequestMapping(
             value = "/board/{boardId}/ships",
@@ -52,6 +45,17 @@ public class DataController {
             @RequestBody List<ShipDto> shipDtos,
             @PathVariable(name = "boardId") String boardId) {
         return gameService.submitBoardShips(shipDtos, boardId);
+    }
+
+    @RequestMapping(
+            value = "/board/{boardId}/hitme",
+            method = RequestMethod.GET
+    )
+    @ResponseBody
+    public SquareDto opponentTurn(
+            @PathVariable(name = "gameId") String gameId,
+            @PathVariable(name = "boardId") String boardId) {
+        return gameService.opponentTurn(gameId, boardId);
     }
 
     @RequestMapping(
@@ -75,11 +79,9 @@ public class DataController {
     @ResponseBody
     public MatchDto getUpdatedMatch(
             @PathVariable(name = "gameId") String gameId) {
-        logger.info("HEEEELLLOOOOOO");
         GameMatch match = gameService.getMatch(gameId);
 
         return ModelMapper.transform(match, new MatchDto());
-//        return new MatchDto();
     }
 
     @RequestMapping(
@@ -172,8 +174,12 @@ public class DataController {
             @PathVariable(name = "gameId") String matchId
     ) {
         GameMatch match = gameService.buildNewMatch();
-        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard());
-        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard(), true);
+//        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
+
+        computerPlayerService.fillBoard(match.getPlayerB().getBoard(), 0);
+        gameService.updateBoardSetting(match.getPlayerB().getBoard());
+
         return ModelMapper.transform(match, new MatchDto());
     }
 

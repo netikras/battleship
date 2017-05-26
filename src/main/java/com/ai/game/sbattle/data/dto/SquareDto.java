@@ -8,7 +8,7 @@ public class SquareDto {
     private String id;
     private String boardId;
     private CoordsDto coordinates;
-    private boolean isRevealed;
+    private boolean revealed;
     private String shipId;
 
     public String getId() {
@@ -36,11 +36,11 @@ public class SquareDto {
     }
 
     public boolean isRevealed() {
-        return isRevealed;
+        return revealed;
     }
 
     public void setRevealed(boolean revealed) {
-        isRevealed = revealed;
+        this.revealed = revealed;
     }
 
     public String getShipId() {
@@ -57,7 +57,7 @@ public class SquareDto {
                 "id='" + id + '\'' +
                 ", boardId='" + boardId + '\'' +
                 ", coordinates=" + coordinates +
-                ", isRevealed=" + isRevealed +
+                ", revealed=" + revealed +
                 ", shipId='" + shipId + '\'' +
                 '}';
     }

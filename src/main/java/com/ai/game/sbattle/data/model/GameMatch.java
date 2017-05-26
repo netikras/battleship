@@ -34,12 +34,12 @@ public class GameMatch {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "player_a_id")
     @ModelTransform(dtoFieldName = "playerA", dtoUpdatable = false)
     private Player playerA;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "player_b_id")
     @ModelTransform(dtoFieldName = "playerB", dtoUpdatable = false)
     private Player playerB;

@@ -38,7 +38,7 @@ public class Player {
     private Date updatedOn;
 
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "boardOwner")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "boardOwner")
 //    @JoinColumn(name = "board_id", updatable = false)
     @ModelTransform(dtoFieldName = "board", dtoUpdatable = false)
     private GameBoard board;
