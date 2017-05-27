@@ -6,7 +6,6 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -22,7 +21,8 @@ public class Initializer implements WebApplicationInitializer {
 
     public static final String CONTEXT_CONFIG_LOCATION = GameConfiguration.class.getPackage().getName();
     public static final String[] MAPPING_URLS = new String[]{
-            "/*"
+            "/game/*",
+            "/play/"
     };
 
 

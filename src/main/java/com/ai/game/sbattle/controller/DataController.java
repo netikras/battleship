@@ -23,7 +23,7 @@ import java.util.List;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(
-        value = "/game/match/{gameId}",
+        value = "/match/{gameId}",
         produces = MediaType.APPLICATION_JSON_UTF8_VALUE
 )
 public class DataController {

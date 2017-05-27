@@ -15,7 +15,8 @@ public class ViewController {
     @RequestMapping(value = {"/", "/play"}, method = RequestMethod.GET)
     public ModelAndView play() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("game");
+
+        modelAndView.setViewName("/ui/index");
         return modelAndView;
     }
 

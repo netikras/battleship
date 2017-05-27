@@ -30,11 +30,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
     compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
 
-    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
-    compile group: 'org.thymeleaf', name: 'thymeleaf', version: "${thymeleafVersion}"
-
-    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4
-    compile group: 'org.thymeleaf', name: 'thymeleaf-spring4', version: "${thymeleafVersion}"
+//    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
+//    compile group: 'org.thymeleaf', name: 'thymeleaf', version: "${thymeleafVersion}"
+//
+//    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4
+//    compile group: 'org.thymeleaf', name: 'thymeleaf-spring4', version: "${thymeleafVersion}"
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${databindVersion}"
@@ -100,7 +100,6 @@ task deployLocal(type: Copy, dependsOn: war) {
     from "${buildDir}/libs/"
     into "${tomcatHomeLocal}/webapps"
     include "*.war"
-    exclude "*workdir*"
 
     def warname = "${project.name}-${version}"
 
@@ -142,5 +141,10 @@ task redeployLocal(dependsOn: ["undeployLocal", "deployLocal"]) {
     doLast {
         println "Redeploying application locally"
     }
+}
+
+
+war {
+    rootSpec.exclude("**/workdir/")
 }
 
