@@ -31,7 +31,7 @@ export class GameBoardsComponent implements OnInit {
   constructor(private gameService: GameSvcService, private tooltipService: TooltipService, private statsService: StatsService) {
   }
 
-  private match: Match;
+  public match: Match;
   private anchorSquare: Square;
   private availableShips: Ship[];
   private selectedSquares: Square[];

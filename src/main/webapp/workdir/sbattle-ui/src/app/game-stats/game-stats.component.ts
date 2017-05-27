@@ -12,6 +12,9 @@ import {Player} from "../model/Player";
 })
 export class GameStatsComponent implements OnInit {
 
+  public stats_on: boolean = false;
+  public ext_on: boolean = false;
+
   constructor(private service: StatsService) {
   }
 

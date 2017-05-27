@@ -8,6 +8,8 @@ import {TooltipService} from "../tooltip.service";
 })
 export class GameTooltipsComponent implements OnInit {
 
+  public tooltipsEnabled: boolean = false;
+
   constructor(private tooltipService: TooltipService) { }
 
   ngOnInit() {

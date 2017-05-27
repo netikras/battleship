@@ -100,6 +100,7 @@ task deployLocal(type: Copy, dependsOn: war) {
     from "${buildDir}/libs/"
     into "${tomcatHomeLocal}/webapps"
     include "*.war"
+    exclude "*workdir*"
 
     def warname = "${project.name}-${version}"
 
