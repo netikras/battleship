@@ -61,7 +61,7 @@ For more info see class: ***PropertiesLoader.java***
 ### Author
 Darius Juodokas a.k.a. _netikras_
 
-##Licence
+## Licence
 The following licence applies to this project
 
 
