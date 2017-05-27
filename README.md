@@ -75,8 +75,14 @@ The following licence applies to this project
 
 
 ## Screens
-
+#### First page
 <img src="https://raw.githubusercontent.com/netikras/battleship/master/meta/pics/first_page.png" alt="first page">
+
+#### Second page (arranging player's fleet)
 <img src="https://raw.githubusercontent.com/netikras/battleship/master/meta/pics/second_page.png" alt="second page">
+
+#### Gameplay
 <img src="https://raw.githubusercontent.com/netikras/battleship/master/meta/pics/gameplay.png" alt="gameplay">
+
+#### I lost to PC miserably
 <img src="https://raw.githubusercontent.com/netikras/battleship/master/meta/pics/win_pc.png" alt="PC won">
