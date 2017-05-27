@@ -72,3 +72,11 @@ The following licence applies to this project
     meet some day, and you think this stuff is worth it, you can buy me a
     pizza in return.
     ------------------------------------------------------------------
+
+
+## Screens
+
+<img src="https://github.com/netikras/battleship/tree/master/meta/pics/first_page.png" alt="first page">
+<img src="https://github.com/netikras/battleship/tree/master/meta/pics/second_page.png" alt="second page">
+<img src="https://github.com/netikras/battleship/tree/master/meta/pics/gameplay.png" alt="gameplay">
+<img src="https://github.com/netikras/battleship/tree/master/meta/pics/win_pc.png" alt="PC won">
