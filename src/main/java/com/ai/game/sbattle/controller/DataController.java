@@ -6,6 +6,7 @@ import com.ai.game.sbattle.data.model.GameMatch;
 import com.ai.game.sbattle.data.model.Player;
 import com.ai.game.sbattle.service.ComputerPlayerService;
 import com.ai.game.sbattle.service.GameService;
+import com.ai.game.sbattle.utils.ConsoleVisualizer;
 import com.ai.game.sbattle.utils.GameBoardUtils;
 import com.ai.game.sbattle.utils.ModelMapper;
 import org.slf4j.Logger;
@@ -80,8 +81,16 @@ public class DataController {
     public MatchDto getUpdatedMatch(
             @PathVariable(name = "gameId") String gameId) {
         GameMatch match = gameService.getMatch(gameId);
+        MatchDto matchDto = ModelMapper.transform(match, new MatchDto());
 
-        return ModelMapper.transform(match, new MatchDto());
+        System.out.println("Board A");
+//        System.out.println(matchDto.getPlayerA().getBoard());
+        ConsoleVisualizer.drawBoard(match.getPlayerA().getBoard());
+        System.out.println("Board B");
+//        System.out.println(matchDto.getPlayerB().getBoard());
+        ConsoleVisualizer.drawBoard(match.getPlayerB().getBoard());
+
+        return matchDto;
     }
 
     @RequestMapping(
@@ -174,11 +183,20 @@ public class DataController {
             @PathVariable(name = "gameId") String matchId
     ) {
         GameMatch match = gameService.buildNewMatch();
-        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard(), true);
-//        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
 
         computerPlayerService.fillBoard(match.getPlayerB().getBoard(), 0);
         gameService.updateBoardSetting(match.getPlayerB().getBoard());
+
+        System.out.println("Starting new match. Player A board:");
+        ConsoleVisualizer.drawBoard(match.getPlayerA().getBoard());
+
+        System.out.println("Starting new match. Player B board:");
+        ConsoleVisualizer.drawBoard(match.getPlayerB().getBoard());
+
+
+        GameBoardUtils.fillWithShipsRandomly(match.getPlayerA().getBoard(), true);
+//        GameBoardUtils.fillWithShipsRandomly(match.getPlayerB().getBoard());
+
 
         return ModelMapper.transform(match, new MatchDto());
     }

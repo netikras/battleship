@@ -6,6 +6,8 @@ import {Board} from "../model/Board";
 import {Coords} from "../model/Coords";
 import {Ship} from "../model/Ship";
 import {Observable} from "rxjs/Observable";
+import {TooltipService} from "../tooltip.service";
+import {StatsService} from "../stats.service";
 
 @Component({
   selector: 'app-game-boards',
@@ -17,10 +19,16 @@ export class GameBoardsComponent implements OnInit {
   private gameStarted: boolean = false;
 
   private setGameStarted(started: boolean): any {
+
+    this.gameService.getUpdatedMatch(this.match.id)
+      .subscribe(
+        m => this.sortSquares(m),
+        error => this.onError(error)
+      );
     this.gameStarted = started;
   }
 
-  constructor(private gameService: GameSvcService) {
+  constructor(private gameService: GameSvcService, private tooltipService: TooltipService, private statsService: StatsService) {
   }
 
   private match: Match;
@@ -29,17 +37,43 @@ export class GameBoardsComponent implements OnInit {
   private selectedSquares: Square[];
   private errorMessage: string;
 
+  private tooltippedShips: boolean = false;
+
+  private dummySquare: Square;
+
   private squaresA: Square[][]; // [y][x]
   private squaresB: Square[][]; // [y][x]
 
   ngOnInit() {
+    this.dummySquare = new Square();
+    let dummyCoords = new Coords();
+    dummyCoords.x = -1;
+    dummyCoords.y = -1;
+    this.dummySquare.coordinates = dummyCoords;
+    this.dummySquare.id = "";
+    this.dummySquare.boardId = "";
+    this.dummySquare.shipId = "";
+    this.dummySquare.revealed = false;
   }
-
 
 
   private onError(error: any) {
     alert(error);
     console.error(error)
+  }
+
+  private showSquareInfo(square: Square) {
+    this.tooltipService.modes.current_square.values = [
+      "SquareID: " + square.id,
+      "Board ID: " + square.boardId,
+      "Ship ID:  " + square.shipId,
+      "Revealed: " + square.revealed.toString(),
+      "Coords:   [" + square.coordinates.x.toString() + "; " + square.coordinates.y.toString() + "]"
+    ];
+  }
+
+  private hideSquareInfo() {
+    this.showSquareInfo(this.dummySquare);
   }
 
 
@@ -49,6 +83,7 @@ export class GameBoardsComponent implements OnInit {
       this.anchorSquare = square;
       console.log("Setting anchor square:");
       console.log(square);
+      this.selectedSquares = [square];
       return;
     }
 
@@ -372,14 +407,40 @@ export class GameBoardsComponent implements OnInit {
     this.match = match;
 
     let ship: Ship;
+    this.prepareBoardShipsTooltip(match.playerA.board, "ships_A");
+    this.prepareBoardShipsTooltip(match.playerB.board, "ships_B");
+
     this.availableShips = [];
     this.unmarkAllSquares();
+    this.statsService.setMatch(match);
     // for (let i = 0; i < match.playerA.board.ships.length; i++) {
     //   ship = match.playerA.board.ships[i];
     //   this.availableShips.push(ship);
     //   this.unlinkShipFromSquares(ship);
     // }
   }
+
+  private prepareBoardShipsTooltip(board: Board, modename: string) {
+
+    let ship: Ship;
+
+    this.tooltipService.modes[modename].values = [" ", modename];
+    for (let i = 0; i < board.ships.length; i++) {
+      ship = board.ships[i];
+      this.tooltipService.modes[modename].values.push("Ship ID:   " + ship.id);
+      this.tooltipService.modes[modename].values.push("Ship type: " + ship.type);
+      this.tooltipService.modes[modename].values.push("Is killed: " + ship.killed.toString());
+
+      for (let s = 0; s < ship.squareIds.length; s++) {
+        let square: Square = this.getSquareInBoard(board.boardId, ship.squareIds[s]);
+
+        this.tooltipService.modes[modename].values.push("  Square ID:   " + square.id);
+        this.tooltipService.modes[modename].values.push("  Is revealed: " + square.revealed.toString());
+        this.tooltipService.modes[modename].values.push("  Coordinates: " + "[" + square.coordinates.x.toString() + "; " + square.coordinates.y.toString() + "]");
+      }
+    }
+  }
+
 
   startNewMatch() {
     this.gameService.startNewMatch().subscribe(
@@ -461,6 +522,7 @@ export class GameBoardsComponent implements OnInit {
     }
 
     if (square.revealed) {
+      console.log(this.match);
       if (this.getShip(square.shipId).killed)
         return "opened_killed";
       return "opened_damaged";

@@ -62,6 +62,15 @@ export class GameSvcService {
       ;
   }
 
+  public getUpdatedMatch(matchId: string): Observable<Match> {
+    this.matchId = matchId;
+    return this.http
+      .get(this.getBaseUrl() + "/poll", this.buildDefaultOptions())
+      .map(this.extractData)
+      .catch(this.handleError)
+      ;
+  }
+
 
 
 

@@ -1,0 +1,20 @@
+<div id="tooltips-container">
+  <label id="tooltips_lbl"><input id="tooltipsEnable" type="checkbox" [checked]="tooltipsEnabled"
+                                  (change)="tooltipsEnabled=!tooltipsEnabled"> >> Tooltips</label>
+  <div *ngIf="tooltipsEnabled">
+    <div *ngFor="let mode of modenames()">
+      <div>
+        <label>
+          <input id="enable_{{mode}}" type="checkbox" [checked]="rawmode(mode).enabled"
+                 (change)="rawmode(mode).enabled= !rawmode(mode).enabled">
+          {{mode}}
+        </label>
+        <pre *ngIf="isEnabled(mode)">
+        <span *ngFor="let modedata of rawmode(mode).values">
+          {{modedata}}
+        </span>
+      </pre>
+      </div>
+    </div>
+  </div>
+</div>

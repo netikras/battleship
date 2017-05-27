@@ -38,6 +38,7 @@ public class ComputerPlayerService {
      */
 
         Ship.ShipType[] shipTypes = Ship.ShipType.values();
+        if (board.getShips() == null) board.setShips(new ArrayList<>(20));
 
         for (int i = shipTypes.length - 1; i >= 0; i--) { // iterating backwards so that we'd start from the smallest ship
             Ship.ShipType shipType = shipTypes[i];
@@ -57,6 +58,7 @@ public class ComputerPlayerService {
                         square.setHostedShip(ship);
                     }
                     ship.setSquares(squaresBlock);
+                    board.getShips().add(ship);
                 }
 
             }

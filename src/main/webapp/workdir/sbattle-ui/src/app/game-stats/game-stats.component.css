@@ -1,0 +1,26 @@
+#stats-container input {
+  display: none;
+}
+
+
+#stats-container label {
+  border-top: solid black 1px;
+  margin-top: 7px;
+  cursor: pointer;
+  display: block;
+}
+
+#summ_A, #summ_B {
+  display: inline-block;
+}
+
+
+#extA, #extB {
+  display: inline-block;
+}
+
+pre.killed {
+  color: red;
+}
+
+

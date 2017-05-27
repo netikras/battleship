@@ -1,0 +1,26 @@
+#tooltips-container {
+  border-bottom: solid black 1px;
+  margin: 10px;
+  margin-bottom: 30px;
+  display: block;
+  padding: 20px;
+}
+
+#tooltipsEnable {
+  display: none;
+}
+
+#tooltips_lbl {
+  cursor: pointer;
+  background-color: #bababa;
+  border: double black;
+  border-radius:5px;
+  padding: 5px;
+}
+
+#tooltips-container pre {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 15px;
+  padding-bottom: 1px;
+  margin: 1px;
+}

@@ -1,10 +1,12 @@
-
-
 <div *ngIf="match" class="game-boards-container">
+
+
   <div class="game-board-player {{gameStarted ? '' : 'board-large' }}">
     <table>
       <tr *ngFor="let row of squaresA; let r = index">
-        <td *ngFor="let sq of row; let c = index" id="pb_{{r}}-{{c}}" (mouseover)="markUntilSquare(sq)"
+        <td *ngFor="let sq of row; let c = index" id="pb_{{r}}-{{c}}" (mouseleave)="hideSquareInfo()"
+            (mouseenter)="showSquareInfo(sq)"
+            (mouseover)="markUntilSquare(sq)"
             (click)="selectShipSquares(sq)" [ngClass]="getClassForPlayerSquare(sq)"></td>
       </tr>
     </table>
@@ -13,7 +15,9 @@
   <div class="game-board-opponent {{gameStarted ? 'board-large' : '' }}">
     <table>
       <tr *ngFor="let row of squaresB; let r = index">
-        <td *ngFor="let sq of row; let c = index" id="ob_{{r}}-{{c}}" (click)="openSquare(sq)"
+        <td *ngFor="let sq of row; let c = index" id="ob_{{r}}-{{c}}" (mouseleave)="hideSquareInfo()"
+            (mouseenter)="showSquareInfo(sq)"
+            (click)="openSquare(sq)"
             [ngClass]="getClassForOpponentSquare(sq)"></td>
       </tr>
     </table>

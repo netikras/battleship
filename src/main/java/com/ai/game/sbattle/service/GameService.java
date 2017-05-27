@@ -4,6 +4,7 @@ import com.ai.game.sbattle.data.dao.GameDao;
 import com.ai.game.sbattle.data.dto.ShipDto;
 import com.ai.game.sbattle.data.dto.SquareDto;
 import com.ai.game.sbattle.data.model.*;
+import com.ai.game.sbattle.utils.ConsoleVisualizer;
 import com.ai.game.sbattle.utils.GameBoardUtils;
 import com.ai.game.sbattle.utils.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,7 @@ public class GameService {
         board = buildNewBoard();
         board.setBoardOwner(createNewPlayer());
         match.setPlayerB(board.getBoardOwner());
+        board.getBoardOwner().setRobot(true);
 //        board.setId(dao.save(board));
         System.out.println("Saved board #2");
 

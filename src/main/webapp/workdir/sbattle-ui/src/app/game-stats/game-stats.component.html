@@ -1,3 +1,49 @@
-<p>
-  game-stats works!
-</p>
+<div id="stats-container">
+
+  <label><input type="checkbox" [checked]="stats_on" (change)="stats_on=!stats_on"> Summary</label>
+  <div *ngIf="stats_on" class="players-stats-summary">
+    <div id="summ_A">
+      <pre *ngFor="let stat of getSquaresStatsForA()">
+        {{stat}}
+      </pre>
+    </div>
+
+    <div id="summ_B">
+      <pre *ngFor="let stat of getSquaresStatsForB()">
+        {{stat}}
+      </pre>
+    </div>
+
+  </div>
+
+  <label><input type="checkbox" [checked]="ext_on" (change)="ext_on=!ext_on"> Extended</label>
+  <div *ngIf="ext_on" id="boards" class="players-stats-extended">
+    <pre id="extA" class="player-stats">
+      id: {{getPlayerForA().id}}
+      name: {{getPlayerForA().name}}
+      isRobot: {{getPlayerForA().robot}}
+
+      Board ID: {{getPlayerForA().board.boardId}}
+
+      <pre *ngFor="let ship of getPlayerForA().board.ships" class="ship-details {{ship.killed?killed:''}}">
+        Ship ID: {{ship.id}}
+        Ship type: {{ship.type}}
+        Ship killed: {{ship.killed}}
+      </pre>
+    </pre>
+
+    <pre id="extB" class="player-stats">
+      id: {{getPlayerForB().id}}
+      name: {{getPlayerForB().name}}
+      isRobot: {{getPlayerForB().robot}}
+
+      Board ID: {{getPlayerForB().board.boardId}}
+
+      <pre *ngFor="let ship of getPlayerForB().board.ships" class="ship-details {{ship.killed?killed:''}}">
+        Ship ID: {{ship.id}}
+        Ship type: {{ship.type}}
+        Ship killed: {{ship.killed}}
+      </pre>
+    </pre>
+  </div>
+</div>
