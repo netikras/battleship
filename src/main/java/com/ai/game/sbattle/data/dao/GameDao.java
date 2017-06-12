@@ -96,44 +96,8 @@ public class GameDao {
     }
 
 
-    public List<Coordinates> getCoordinatesSortedByHitCountAsc() {
+    public List<Coordinates> getCoordinatesSortedByHitCountAsc(String currBoardId) {
         // FIXME exclude current game
-        /*
-select
-  i.address, count(r.electronic) as el_count
-from
-  inbox_user iu
-  join inbox i
-    on i.id = iu.inbox_id
-  left join message m
-    on m.sender_box_id = i.id
-  left join recipient r
-    on r.message_id = m.id
-
-where
-  i.type = 'PERSON'
-  and ( r.electronic = 1 or r.electronic is null)
-
-group by i.address
-order by el_count desc
-;
-         */
-
-
-        /*
-        select
-            c.id,
-            count(sq.revealed) as hit_count
-        from
-            coordinates c
-            left join square sq
-                on sq.coord_id = c.id
-        where
-            sq.revealed = 1
-            or sq.revealed is null
-        group by c.id
-        order by hit_count desc
-         */
 
 
         String queryString = "" +
@@ -149,6 +113,12 @@ order by el_count desc
                 "            coordinates c " +
                 "            left join board_square sq " +
                 "                on sq.coord_id = c.id " +
+                "            left join game_board b " +
+                "                on b.id = sq.board_id " +
+                "                and b.id != :currBoard " +
+                "             left join players p " +
+                "                on p.id = b.player_id " +
+                "                and p.robot = true " +
                 "        where " +
                 "            sq.revealed = true " +
                 "            or sq.revealed is null " +
@@ -159,32 +129,8 @@ order by el_count desc
                 "order by stats.hit_count asc "
                 ;
 
-
-//        Query query = getCurrentSession()
-//                .createQuery(
-//                        "SELECT " +
-//                                        "c " +
-//                                "FROM " +
-//                                    "Coordinates c " +
-//                                    "JOIN ( " +
-//                                        "SELECT " +
-//                                            "c.id, " +
-//                                            "count(sq.revealed) as hit_count " +
-//                                        "FROM " +
-//                                            "Coordinates c " +
-//                                            "LEFT JOIN Square sq " +
-//                                                "on sq.coordinates.id = c.id " +
-//                                        "WHERE " +
-//                                            "sq.revealed = true " +
-//                                            "OR sq.revealed is null " +
-//                                        "GROUP BY c.id " +
-//                                        "ORDER BY hit_count DESC " +
-//                                    ") stats " +
-//                                        "on stats.id = c.id " +
-//                                "ORDER BY stats.hit_count ASC"
-//                );
-
         NativeQuery query = getCurrentSession().createNativeQuery(queryString);
+        query.setParameter("currBoard", currBoardId);
 
 
         return query.addEntity(Coordinates.class).list();
@@ -192,27 +138,6 @@ order by el_count desc
 
     public List<Square> getSquaresToHit(List<String> candidatesIds) {
         // FIXME exclude current game
-        /*
-        select paper, electronic, count(*) as occurrences from recipient group by paper, electronic order by occurrences desc;
-        select
-            c.id,
-            count(*) as total_count
-        from
-            square sq
-            join coordinates c
-                on c.id = sq.coord_id
-            join board b
-                on game_board.id = sq.board_id
-            join player p
-                on p.id = b.player_id
-                and p.robot <> 1
-        where
-            sq.hosted_ship_id is not null
-            and c.id in [coords]
-        group by c.id
-        order by total_count desc
-        ;
-         */
 
 
         List<Square> squares = null;
@@ -222,40 +147,8 @@ order by el_count desc
     }
 
 
-    public List<Coordinates> getCoordinatesSortedByShipCountDesc() {
+    public List<Coordinates> getCoordinatesSortedByShipCountDesc(String currentBoardId) {
         // FIXME exclude current game
-        /*
-
-        NOT returning squares having 0 ships ever hosted on them. If square has not been used it should be picked up randomly.
-        Otherwise it would be just stupid picking squares one-by-one in the same order...
-
-        select
-            c.*
-        from
-            coordinates c
-            join (
-                select
-                    c.id,
-                    count(*) as total_count
-                from
-                    square sq
-                    join coordinates c
-                        on c.id = sq.coord_id
-                    join board b
-                        on game_board.id = sq.board_id
-                    join player p
-                        on p.id = b.player_id
-                        and p.robot <> 1
-                where
-                    sq.hosted_ship_id is not null
-                group by c.id
-                order by total_count desc
-            ) stats
-                on stats.id = c.id
-        order by stats.total_count desc
-        ;
-         */
-
 
         String queryStr = "" +
                 "SELECT " +
@@ -272,6 +165,7 @@ order by el_count desc
                 "                on c.id = sq.coord_id " +
                 "            JOIN game_board b " +
                 "                on b.id = sq.board_id " +
+                "                and b.id != :currBoard " +
                 "            JOIN Players p " +
                 "                on p.id = b.player_id " +
                 "                and p.robot = false " +
@@ -284,6 +178,7 @@ order by el_count desc
                 "ORDER BY stats.total_count DESC"
                 ;
         NativeQuery query = getCurrentSession().createNativeQuery(queryStr);
+        query.setParameter("currBoard", currentBoardId);
 
         List<Coordinates> coords = query.addEntity(Coordinates.class).list();
 

@@ -1,5 +1,6 @@
 package com.ai.game.sbattle.config;
 
+import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.WebApplicationInitializer;
@@ -7,9 +8,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
+import java.sql.SQLException;
 
 /**
  * Created by netikras on 17.5.15.
@@ -30,9 +30,17 @@ public class Initializer implements WebApplicationInitializer {
     ServletRegistration dispatcherServlet = null;
     WebApplicationContext webAppContext = null;
     ServletContext servletContext = null;
+    Server dbServer = null;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+
+//        try {
+//            startDatabase();
+//            servletContext.addListener(new ServletShutdownListener());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         logger.info("Beginning component initialization");
         logger.debug("Context config location: {}", CONTEXT_CONFIG_LOCATION);
@@ -67,5 +75,33 @@ public class Initializer implements WebApplicationInitializer {
         }
     }
 
+
+
+    private void startDatabase() throws SQLException, ClassNotFoundException {
+        logger.info("Starting up database server");
+        dbServer = Server.createWebServer().start();
+        dbServer = Server.createTcpServer("-tcpAllowOthers", "-web", "-browser").start();
+        logger.info("Database server started");
+        Class.forName("org.h2.Driver");
+
+//        Runtime.getRuntime().addShutdownHook(new Thread(dbServer::stop));
+
+    }
+
+
+    private class ServletShutdownListener implements ServletContextListener {
+
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+
+        }
+
+        @Override
+        public void contextDestroyed(ServletContextEvent sce) {
+            logger.info("Stopping database server");
+            dbServer.stop();
+        }
+
+    }
 
 }

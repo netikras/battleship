@@ -174,7 +174,7 @@ public class ComputerPlayerService {
 
     private List<Square> getSquaresForFillingBoardSortedDesc(GameBoard board) {
 
-        List<Coordinates> coordinates = dao.getCoordinatesSortedByHitCountAsc();
+        List<Coordinates> coordinates = dao.getCoordinatesSortedByHitCountAsc(board.getId());
 
         List<Square> squares = new ArrayList<>();
         int ratio = 0;
@@ -401,11 +401,14 @@ public class ComputerPlayerService {
 
     private Square getBestGuessedOccupiedSquare(GameBoard board) {
 //        List<Square> hittableSquares = dao.getSquaresToHit(getCoveredSquares(board));
-        List<Coordinates> hittableCoords = dao.getCoordinatesSortedByHitCountAsc();
+        List<Coordinates> hittableCoords = dao.getCoordinatesSortedByShipCountDesc(board.getId());
 
         List<Square> hittableSquares = new ArrayList<>();
         List<Square> remainingSquares = getCoveredSquares(board);
 
+        if (hittableCoords == null || hittableCoords.isEmpty()) {
+            return null;
+        }
         for (Coordinates coordinates : hittableCoords) {
             Square square = GameBoardUtils.getSquare(remainingSquares, coordinates.getX(), coordinates.getY());
             if (square != null) {

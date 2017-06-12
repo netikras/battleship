@@ -98,7 +98,7 @@ export class GameStatsComponent implements OnInit {
 
     return [
       "Opened squares: " + revealed + "/" + this.getPlayerForA().board.squares.length + "",
-      "Ships sunk: " + shipsKilled + "/" + this.getPlayerForA().board.ships.length + "",
+      "Ships drowned: " + shipsKilled + "/" + this.getPlayerForA().board.ships.length + "",
       "Ship squares damaged:" + damagedShips + "/" + 18 + ""
     ];
   }
@@ -123,7 +123,7 @@ export class GameStatsComponent implements OnInit {
 
     return [
       "Opened squares: " + revealed + "/" + this.getPlayerForB().board.squares.length + "",
-      "Ships sunk: " + shipsKilled + "/" + this.getPlayerForB().board.ships.length + "",
+      "Ships drowned: " + shipsKilled + "/" + this.getPlayerForB().board.ships.length + "",
       "Ship squares damaged:" + damagedShips + "/" + 18 + ""
     ];
   }
